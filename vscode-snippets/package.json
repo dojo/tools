@@ -38,7 +38,8 @@
 		"onCommand:dojo.addIntersection",
 		"onCommand:dojo.addResize",
 		"onCommand:dojo.addValidity",
-		"onCommand:dojo.addStore"
+		"onCommand:dojo.addStore",
+		"onCommand:dojo.addProperties"
 	],
 	"contributes": {
 		"snippets": [
@@ -109,6 +110,11 @@
 			{
 				"command": "dojo.addStore",
 				"title": "Dojo: Add store middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addProperties",
+				"title": "Dojo: Add properties to widget",
 				"category": "Dojo"
 			}
 		]

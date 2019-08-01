@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
-import { parse } from 'path';
+import { parse, join } from 'path';
+import { existsSync, writeFileSync } from 'fs';
 
 function findLine(document: vscode.TextDocument, test: RegExp, reverse = false) {
 	for (let i = 0; i < document.lineCount; i++) {
@@ -10,17 +11,17 @@ function findLine(document: vscode.TextDocument, test: RegExp, reverse = false) 
 	}
 }
 
+const vdomImportRegex = /import \{[a-zA-Z0-9, ]+\} from '@dojo\/framework\/core\/vdom';/g;
+const createLineRegex = /create\((\{[a-zA-Z0-9, ]+\})*\)/g;
+const widgetFactoryRegex = /export (?:default|const [a-zA-Z0-9]+[ ]*=)[ ]*[a-zA-Z0-9]+\((?:function [a-zA-Z0-9]+)*\((?:{[\s\S ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[\s\S ]*\}[ ]*)*\)/g;
+const widgetFactoryReplaceRegex = /\((?:{[\s\S ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[\s\S ]*\}[ ]*)*\)/g;
+const importLineRegex = /import [\s\S]+ from ['"]{1}[\s\S]+['"]{1}[;]*/g;
+
 function addMiddleware(
 	document: vscode.TextDocument,
 	editBuilder: vscode.TextEditorEdit,
 	middleware: string
 ) {
-	const vdomImportRegex = /import \{[a-zA-Z0-9, ]+\} from '@dojo\/framework\/core\/vdom';/g;
-	const createLineRegex = /create\((\{[a-zA-Z0-9, ]+\})*\)/g;
-	const widgetFactoryRegex = /export (?:default|const [a-zA-Z0-9]+[ ]*=)[ ]*[a-zA-Z0-9]+\((?:function [a-zA-Z0-9]+)*\((?:{[ ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[ ]*\}[ ]*)*\)/g;
-	const widgetFactoryReplaceRegex = /\((?:{[ ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[ ]*\}[ ]*)*\)/g;
-	const importLineRegex = /import [\s\S]+ from ['"]{1}[\s\S]+['"]{1}[;]*/g;
-
 	let importName = middleware;
 	if (middleware === 'store') {
 		importName = `create${importName.charAt(0).toUpperCase()}${importName.slice(1)}Middleware`;
@@ -35,8 +36,8 @@ function addMiddleware(
 	const createLine = findLine(document, createLineRegex);
 	if (createLine) {
 		let newCreateLine = createLine.text;
-		createLineRegex.lastIndex = 0;
 		const match = createLineRegex.exec(newCreateLine);
+		createLineRegex.lastIndex = 0;
 		if (match && match.length > 1 && match[1]) {
 			let middlewares = match[1];
 			const newMiddleware = middlewares.replace(/[ ]*\}/g, `, ${middleware} }`);
@@ -63,9 +64,17 @@ function addMiddleware(
 			switch(middleware) {
 				case 'theme':
 					editBuilder.insert(lastImportStatement.rangeIncludingLineBreak.end, `import * as css from './${file.name}.m.css';\r\n`);
+					const cssFile = join(file.dir, `${file.name}.m.css`);
+					if (!existsSync(cssFile)) {
+						writeFileSync(cssFile, '');
+					}
 					break;
 				case 'i18n':
 					editBuilder.insert(lastImportStatement.rangeIncludingLineBreak.end, `import bundle from './${file.name}.nls';\r\n`);
+					const bundleFile = join(file.dir, `${file.name}.nls.ts`);
+					if (!existsSync(bundleFile)) {
+						writeFileSync(bundleFile, '');
+					}
 					break;
 			}
 		}
@@ -75,6 +84,7 @@ function addMiddleware(
 	if (widgetFactoryLine) {
 		let newFactoryLine = widgetFactoryLine.text;
 		const match = widgetFactoryReplaceRegex.exec(newFactoryLine);
+		widgetFactoryReplaceRegex.lastIndex = 0;
 		if (match && match.length > 1 && match[1]) {
 			let middlewares = match[1];
 			const newMiddleware = middlewares.replace(/[ ]*\}/g, `, ${middleware} }`);
@@ -83,6 +93,21 @@ function addMiddleware(
 			newFactoryLine = newFactoryLine.replace('()', `({ middleware: { ${middleware} } })`);
 		}
 		editBuilder.replace(widgetFactoryLine.range, newFactoryLine);
+
+		switch (middleware) {
+			case 'theme':
+				editBuilder.insert(
+					widgetFactoryLine.rangeIncludingLineBreak.end,
+					`\tconst themedCss = theme.classes(css);\r\n`
+				);
+				break;
+			case 'i18n':
+				editBuilder.insert(
+					widgetFactoryLine.rangeIncludingLineBreak.end,
+					`\tconst { messages } = i18n.localize(bundle);\r\n`
+				);
+				break;
+		}
 	}
 }
 
@@ -163,6 +188,35 @@ export function activate(context: vscode.ExtensionContext) {
 			if (editor) {
 				let document = editor.document;
 				editor.edit((editBuilder) => addMiddleware(document, editBuilder, 'store'));
+			}
+		}),
+		vscode.commands.registerCommand('dojo.addProperties', function() {
+			let editor = vscode.window.activeTextEditor;
+			if (editor) {
+				let document = editor.document;
+				editor.edit((editBuilder) => {
+					const file = parse(document.fileName);
+					const lastImportStatement = findLine(document, importLineRegex, true);
+					if (lastImportStatement) {
+						editBuilder.insert(
+							lastImportStatement.rangeIncludingLineBreak.end,
+							`\r\ninterface ${file.name}Properties {\r\n\r\n}\r\n`
+						);
+					}
+
+					const createLine = findLine(document, createLineRegex);
+					if (createLine) {
+						const newCreateLine = createLine.text.replace(');', `).properties<${file.name}Properties>();`);
+						editBuilder.replace(createLine.range, newCreateLine);
+					}
+
+					const widgetFactoryLine = findLine(document, widgetFactoryRegex);
+					if (widgetFactoryLine) {
+						const newWidgetFactoryLine = widgetFactoryLine.text.replace(/([ ]*}[ ]*\))/g, `, properties })`);
+						editBuilder.replace(widgetFactoryLine.range, newWidgetFactoryLine);
+						editBuilder.insert(widgetFactoryLine.rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+					}
+				});
 			}
 		})
 	);

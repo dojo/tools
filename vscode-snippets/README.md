@@ -26,6 +26,7 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 | Dojo: Add intersection middleware    | Imports and configures intersection middleware for use    |
 | Dojo: Add resize middleware          | Imports and configures resize middleware for use          |
 | Dojo: Add store middleware           | Imports and configures store middleware for use           |
+| Dojo: Add properties to widget       | Creates properties interface and configures in widget     |
 
 ### Commands
 
