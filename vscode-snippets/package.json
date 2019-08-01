@@ -39,6 +39,7 @@
 		"onCommand:dojo.addResize",
 		"onCommand:dojo.addValidity",
 		"onCommand:dojo.addStore",
+		"onCommand:dojo.addDimensions",
 		"onCommand:dojo.addProperties"
 	],
 	"contributes": {
@@ -110,6 +111,11 @@
 			{
 				"command": "dojo.addStore",
 				"title": "Dojo: Add store middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addDimensions",
+				"title": "Dojo: Add dimensions middleware",
 				"category": "Dojo"
 			},
 			{

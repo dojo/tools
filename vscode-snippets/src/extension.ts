@@ -36,8 +36,8 @@ function addMiddleware(
 	const createLine = findLine(document, createLineRegex);
 	if (createLine) {
 		let newCreateLine = createLine.text;
-		const match = createLineRegex.exec(newCreateLine);
 		createLineRegex.lastIndex = 0;
+		const match = createLineRegex.exec(newCreateLine);
 		if (match && match.length > 1 && match[1]) {
 			let middlewares = match[1];
 			const newMiddleware = middlewares.replace(/[ ]*\}/g, `, ${middleware} }`);
@@ -83,8 +83,8 @@ function addMiddleware(
 	const widgetFactoryLine = findLine(document, widgetFactoryRegex);
 	if (widgetFactoryLine) {
 		let newFactoryLine = widgetFactoryLine.text;
-		const match = widgetFactoryReplaceRegex.exec(newFactoryLine);
 		widgetFactoryReplaceRegex.lastIndex = 0;
+		const match = widgetFactoryReplaceRegex.exec(newFactoryLine);
 		if (match && match.length > 1 && match[1]) {
 			let middlewares = match[1];
 			const newMiddleware = middlewares.replace(/[ ]*\}/g, `, ${middleware} }`);
@@ -188,6 +188,13 @@ export function activate(context: vscode.ExtensionContext) {
 			if (editor) {
 				let document = editor.document;
 				editor.edit((editBuilder) => addMiddleware(document, editBuilder, 'store'));
+			}
+		}),
+		vscode.commands.registerCommand('dojo.addDimensions', function() {
+			let editor = vscode.window.activeTextEditor;
+			if (editor) {
+				let document = editor.document;
+				editor.edit((editBuilder) => addMiddleware(document, editBuilder, 'dimensions'));
 			}
 		}),
 		vscode.commands.registerCommand('dojo.addProperties', function() {
