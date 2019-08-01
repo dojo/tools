@@ -1,0 +1,134 @@
+{
+	"name": "vscode-dojo-snippets",
+	"displayName": "vscode-dojo-snippets",
+	"description": "",
+	"icon": "images/dojo-logo.png",
+	"galleryBanner": {
+		"color": "#0273D4",
+		"theme": "dark"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/KaneFreeman/vscode-dojo-snippets.git"
+	},
+	"keywords": [
+		"Dojo",
+		"Dojo 2",
+		"Dojo 6",
+		"TypeScript"
+	],
+	"version": "6.0.0",
+	"engines": {
+		"vscode": "^1.36.0"
+	},
+	"categories": [
+		"Snippets",
+		"Other"
+	],
+	"main": "./out/extension",
+	"activationEvents": [
+		"onCommand:dojo.addi18n",
+		"onCommand:dojo.addTheme",
+		"onCommand:dojo.addBlock",
+		"onCommand:dojo.addBreakpoint",
+		"onCommand:dojo.addCache",
+		"onCommand:dojo.addIcache",
+		"onCommand:dojo.addFocus",
+		"onCommand:dojo.addIntersection",
+		"onCommand:dojo.addResize",
+		"onCommand:dojo.addValidity",
+		"onCommand:dojo.addStore"
+	],
+	"contributes": {
+		"snippets": [
+			{
+				"language": "typescriptreact",
+				"path": "./snippets/typescriptreact.json"
+			},
+			{
+				"language": "typescriptreact",
+				"path": "./snippets/typescript.json"
+			},
+			{
+				"language": "typescript",
+				"path": "./snippets/typescript.json"
+			}
+		],
+		"commands": [
+			{
+				"command": "dojo.addi18n",
+				"title": "Dojo: Add i18n middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addTheme",
+				"title": "Dojo: Add theme middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addBlock",
+				"title": "Dojo: Add block middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addBreakpoint",
+				"title": "Dojo: Add breakpoint middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addCache",
+				"title": "Dojo: Add cache middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addIcache",
+				"title": "Dojo: Add icache middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addFocus",
+				"title": "Dojo: Add focus middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addIntersection",
+				"title": "Dojo: Add intersection middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addResize",
+				"title": "Dojo: Add resize middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addValidity",
+				"title": "Dojo: Add validity middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addStore",
+				"title": "Dojo: Add store middleware",
+				"category": "Dojo"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+    "prettier": "prettier --write \"./src/**\""
+	},
+	"devDependencies": {
+		"prettier": "1.18.2",
+		"typescript": "3.4.5",
+		"vscode": "1.1.36"
+	},
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 4,
+    "useTabs": true,
+    "printWidth": 100,
+    "arrowParens": "always"
+  }
+}
