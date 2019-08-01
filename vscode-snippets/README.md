@@ -62,11 +62,9 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 
 ### Get up and running straight away
 
-* Press `F5` to open a new window with your extension loaded.
-* Create a new file with a file name suffix matching your language.
-* Verify that your snippets are proposed on intellisense.
+* Press `F5` to open a new window with the extension loaded.
 
 ### Make changes
 
 * You can relaunch the extension from the debug toolbar after making changes to the files listed above.
-* You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the VS Code window with your extension to load your changes.
+* You can also reload (`Ctrl+R` or `Cmd+R` on Mac) the VS Code window with the extension to load any changes.
