@@ -1,6 +1,6 @@
-# Dojo TypeScript Snippets for VS Code
+# Dojo Snippets for VS Code
 
-This extension for Visual Studio Code adds snippets and supporting commands for Dojo 6+ for TypeScript.
+This extension for Visual Studio Code adds snippets and supporting commands for Dojo 6+.
 
 ![Use Extension](images/use-extension.gif)
 
