@@ -1,11 +1,9 @@
 import * as vscode from 'vscode';
+import { parse } from 'path';
 
 function findLine(document: vscode.TextDocument, test: RegExp, reverse = false) {
-	let start = reverse ? document.lineCount : 0;
-	let end = reverse ? 0 : document.lineCount;
-	let iChange = reverse ? -1 : 1;
-	for (let i = start; i < end; i = i + iChange) {
-		const line = document.lineAt(i);
+	for (let i = 0; i < document.lineCount; i++) {
+		const line = document.lineAt(reverse ? document.lineCount - i - 1 : i);
 		if (test.test(line.text)) {
 			return line;
 		}
@@ -21,6 +19,7 @@ function addMiddleware(
 	const createLineRegex = /create\((\{[a-zA-Z0-9, ]+\})*\)/g;
 	const widgetFactoryRegex = /export (?:default|const [a-zA-Z0-9]+[ ]*=)[ ]*[a-zA-Z0-9]+\((?:function [a-zA-Z0-9]+)*\((?:{[ ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[ ]*\}[ ]*)*\)/g;
 	const widgetFactoryReplaceRegex = /\((?:{[ ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[ ]*\}[ ]*)*\)/g;
+	const importLineRegex = /import [\s\S]+ from ['"]{1}[\s\S]+['"]{1}[;]*/g;
 
 	let importName = middleware;
 	if (middleware === 'store') {
@@ -54,6 +53,21 @@ function addMiddleware(
 					`const ${middleware} = ${importName}();\r\n`
 				);
 				break;
+		}
+	}
+
+	if (middleware === 'theme' || middleware === 'i18n') {
+		const lastImportStatement = findLine(document, importLineRegex, true);
+		if (lastImportStatement) {
+			const file = parse(document.fileName);
+			switch(middleware) {
+				case 'theme':
+					editBuilder.insert(lastImportStatement.rangeIncludingLineBreak.end, `import * as css from './${file.name}.m.css';\r\n`);
+					break;
+				case 'i18n':
+					editBuilder.insert(lastImportStatement.rangeIncludingLineBreak.end, `import bundle from './${file.name}.nls';\r\n`);
+					break;
+			}
 		}
 	}
 

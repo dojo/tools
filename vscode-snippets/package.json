@@ -117,18 +117,19 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-    "prettier": "prettier --write \"./src/**\""
+		"prettier": "prettier --write \"./src/**\""
 	},
 	"devDependencies": {
+		"@types/node": "10.14.14",
 		"prettier": "1.18.2",
 		"typescript": "3.4.5",
 		"vscode": "1.1.36"
 	},
-  "prettier": {
-    "singleQuote": true,
-    "tabWidth": 4,
-    "useTabs": true,
-    "printWidth": 100,
-    "arrowParens": "always"
-  }
+	"prettier": {
+		"singleQuote": true,
+		"tabWidth": 4,
+		"useTabs": true,
+		"printWidth": 100,
+		"arrowParens": "always"
+	}
 }
