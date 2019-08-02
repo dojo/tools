@@ -2,50 +2,80 @@ import * as vscode from 'vscode';
 import { parse, join } from 'path';
 import { existsSync, writeFileSync } from 'fs';
 
-function findLine(document: vscode.TextDocument, test: RegExp, reverse = false) {
-	for (let i = 0; i < document.lineCount; i++) {
+function findLine(document: vscode.TextDocument, test: RegExp, options: {
+	reverse?: boolean
+	startAt?: number
+	endTest?: RegExp
+} = {}) {
+	test.lastIndex = 0;
+	const {
+		reverse = false,
+		startAt = reverse ? document.lineCount - 1 : 0,
+		endTest
+	} = options;
+	for (let i = reverse ? document.lineCount - startAt - 1 : startAt; i < document.lineCount; i++) {
 		const line = document.lineAt(reverse ? document.lineCount - i - 1 : i);
 		if (test.test(line.text)) {
+			return line;
+		}
+		if (endTest && endTest.test(line.text)) {
 			return line;
 		}
 	}
 }
 
-const vdomImportRegex = /import \{[a-zA-Z0-9, ]+\} from '@dojo\/framework\/core\/vdom';/g;
-const createLineRegex = /create\((\{[a-zA-Z0-9, ]+\})*\)/g;
-const widgetFactoryRegex = /export (?:default|const [a-zA-Z0-9]+[ ]*=)[ ]*[a-zA-Z0-9]+\((?:function [a-zA-Z0-9]+)*\((?:{[\s\S ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[\s\S ]*\}[ ]*)*\)/g;
-const widgetFactoryReplaceRegex = /\((?:{[\s\S ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[\s\S ]*\}[ ]*)*\)/g;
-const importLineRegex = /import [\s\S]+ from ['"]{1}[\s\S]+['"]{1}[;]*/g;
+const regexFactory = () => ({
+	vdomImport: /import \{[a-zA-Z0-9, ]+\} from '@dojo\/framework\/core\/vdom';/g,
+	createLine: /create\(({[a-zA-Z0-9, ]*\})*[\)]*/g,
+	createAloneLine: /create[ ]*\({/g,
+	createLineEnd: /[}]*\);/g,
+	widgetFactoryStart: /export (?:default|const [a-zA-Z0-9]+[ ]*=)[ ]*[a-zA-Z0-9]+\((?:function [a-zA-Z0-9]+)*\([{]*/g,
+	widgetFactoryEnd: /[}]*\)[ ]*(?:=>[ ]*)*{/g,
+	widgetFactoryReplace: /[{]*[\s\S ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[\s\S ]*[\}]*[ ]*/g,
+	widgetFactoryMiddlewareAlone: /middleware:[ ]*{[ ]*$/g,
+	importLine: /import [\s\S]+ from ['"]{1}[\s\S]+['"]{1}[;]*/g
+});
 
 function addMiddleware(
 	document: vscode.TextDocument,
 	editBuilder: vscode.TextEditorEdit,
 	middleware: string
 ) {
+	const regex = regexFactory();
 	let importName = middleware;
 	if (middleware === 'store') {
 		importName = `create${importName.charAt(0).toUpperCase()}${importName.slice(1)}Middleware`;
 	}
 
 	const importStatement = `import ${importName} from \'@dojo/framework/core/middleware/${middleware}\';\r\n`;
-	const importLine = findLine(document, vdomImportRegex);
+	const importLine = findLine(document, regex.vdomImport);
 	if (importLine) {
 		editBuilder.insert(importLine.rangeIncludingLineBreak.end, importStatement);
 	}
 
-	const createLine = findLine(document, createLineRegex);
+	const createLine = findLine(document, regex.createLine);
 	if (createLine) {
 		let newCreateLine = createLine.text;
-		createLineRegex.lastIndex = 0;
-		const match = createLineRegex.exec(newCreateLine);
-		if (match && match.length > 1 && match[1]) {
-			let middlewares = match[1];
-			const newMiddleware = middlewares.replace(/[ ]*\}/g, `, ${middleware} }`);
-			newCreateLine = newCreateLine.replace(middlewares, newMiddleware);
-		} else {
-			newCreateLine = newCreateLine.replace('create()', `create({ ${middleware} })`);
+		regex.createLine.lastIndex = 0;
+		const match = regex.createLine.exec(newCreateLine);
+		let edit = true;
+		if (match && match.length > 0) {
+			if (match.length > 1 && match[1]) {
+				let middlewares = match[1];
+				const newMiddleware = middlewares.replace(/[ ]*\}/g, `, ${middleware} }`);
+				newCreateLine = newCreateLine.replace(middlewares, newMiddleware);
+			} else if (regex.createAloneLine.test(newCreateLine)) {
+				edit = false;
+				const tabCount = (newCreateLine.match(/\t/g) || []).length + 1;
+				editBuilder.insert(createLine.rangeIncludingLineBreak.end, `${'\t'.repeat(tabCount)}${middleware},\r\n`);
+			}
+			else {
+				newCreateLine = newCreateLine.replace('create()', `create({ ${middleware} })`);
+			}
 		}
-		editBuilder.replace(createLine.range, newCreateLine);
+		if (edit) {
+			editBuilder.replace(createLine.range, newCreateLine);
+		}
 
 		switch (middleware) {
 			case 'store':
@@ -58,7 +88,7 @@ function addMiddleware(
 	}
 
 	if (middleware === 'theme' || middleware === 'i18n') {
-		const lastImportStatement = findLine(document, importLineRegex, true);
+		const lastImportStatement = findLine(document, regex.importLine, { reverse: true });
 		if (lastImportStatement) {
 			const file = parse(document.fileName);
 			switch(middleware) {
@@ -80,30 +110,52 @@ function addMiddleware(
 		}
 	}
 
-	const widgetFactoryLine = findLine(document, widgetFactoryRegex);
-	if (widgetFactoryLine) {
-		let newFactoryLine = widgetFactoryLine.text;
-		widgetFactoryReplaceRegex.lastIndex = 0;
-		const match = widgetFactoryReplaceRegex.exec(newFactoryLine);
-		if (match && match.length > 1 && match[1]) {
-			let middlewares = match[1];
-			const newMiddleware = middlewares.replace(/[ ]*\}/g, `, ${middleware} }`);
-			newFactoryLine = newFactoryLine.replace(middlewares, newMiddleware);
-		} else {
-			newFactoryLine = newFactoryLine.replace('()', `({ middleware: { ${middleware} } })`);
+	let widgetFactoryMiddlewareLine = findLine(document, regex.widgetFactoryStart);
+	if (widgetFactoryMiddlewareLine) {
+		if (!regex.widgetFactoryEnd.test(widgetFactoryMiddlewareLine.text)) {
+			const middlewareLine = findLine(document, regex.widgetFactoryReplace, {
+				startAt: widgetFactoryMiddlewareLine.lineNumber,
+				endTest: regex.widgetFactoryEnd
+			});
+			if (middlewareLine) {
+				widgetFactoryMiddlewareLine = middlewareLine;
+			}
 		}
-		editBuilder.replace(widgetFactoryLine.range, newFactoryLine);
+		let newFactoryMiddlewareLine = widgetFactoryMiddlewareLine.text;
+		regex.widgetFactoryReplace.lastIndex = 0;
+		const match = regex.widgetFactoryReplace.exec(newFactoryMiddlewareLine);
+		let edit = true;
+		if (match && match.length > 0) {
+			if (match.length > 1 && match[1]) {
+				let middlewares = match[1];
+				const newMiddleware = middlewares.replace(/[ ]*\}/g, `, ${middleware} }`);
+				newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace(middlewares, newMiddleware);
+			} else if (regex.widgetFactoryMiddlewareAlone.test(newFactoryMiddlewareLine)) {
+				edit = false;
+				const tabCount = (newFactoryMiddlewareLine.match(/\t/g) || []).length + 1;
+				editBuilder.insert(widgetFactoryMiddlewareLine.rangeIncludingLineBreak.end, `${'\t'.repeat(tabCount)}${middleware},\r\n`);
+			}
+		}
+		else if (/[ ]*}[ ]*\)/g.test(newFactoryMiddlewareLine)) {
+			newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace(/[ ]*}[ ]*\)/g, `, middleware: { ${middleware} } })`);
+		}
+		else {
+			newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace('()', `({ middleware: { ${middleware} } })`);
+		}
+		if (edit) {
+			editBuilder.replace(widgetFactoryMiddlewareLine.range, newFactoryMiddlewareLine);
+		}
 
 		switch (middleware) {
 			case 'theme':
 				editBuilder.insert(
-					widgetFactoryLine.rangeIncludingLineBreak.end,
+					widgetFactoryMiddlewareLine.rangeIncludingLineBreak.end,
 					`\tconst themedCss = theme.classes(css);\r\n`
 				);
 				break;
 			case 'i18n':
 				editBuilder.insert(
-					widgetFactoryLine.rangeIncludingLineBreak.end,
+					widgetFactoryMiddlewareLine.rangeIncludingLineBreak.end,
 					`\tconst { messages } = i18n.localize(bundle);\r\n`
 				);
 				break;
@@ -202,8 +254,9 @@ export function activate(context: vscode.ExtensionContext) {
 			if (editor) {
 				let document = editor.document;
 				editor.edit((editBuilder) => {
+					const regex = regexFactory();
 					const file = parse(document.fileName);
-					const lastImportStatement = findLine(document, importLineRegex, true);
+					const lastImportStatement = findLine(document, regex.importLine, { reverse: true });
 					if (lastImportStatement) {
 						editBuilder.insert(
 							lastImportStatement.rangeIncludingLineBreak.end,
@@ -211,17 +264,46 @@ export function activate(context: vscode.ExtensionContext) {
 						);
 					}
 
-					const createLine = findLine(document, createLineRegex);
+					const createLine = findLine(document, regex.createLine);
 					if (createLine) {
-						const newCreateLine = createLine.text.replace(');', `).properties<${file.name}Properties>();`);
-						editBuilder.replace(createLine.range, newCreateLine);
+						let line: vscode.TextLine | undefined;
+						if (regex.createLineEnd.test(createLine.text)) {
+							line = createLine;
+						}
+						else {
+							const createEndLine = findLine(document, regex.createLineEnd, { startAt: createLine.lineNumber });
+							if (createEndLine) {
+								line = createEndLine;
+							}
+						}
+						if (line) {
+							const newCreateLine = line.text.replace(');', `).properties<${file.name}Properties>();`);
+							editBuilder.replace(line.range, newCreateLine);
+						}
 					}
 
-					const widgetFactoryLine = findLine(document, widgetFactoryRegex);
+					const widgetFactoryLine = findLine(document, regex.widgetFactoryStart);
 					if (widgetFactoryLine) {
-						const newWidgetFactoryLine = widgetFactoryLine.text.replace(/([ ]*}[ ]*\))/g, `, properties })`);
-						editBuilder.replace(widgetFactoryLine.range, newWidgetFactoryLine);
-						editBuilder.insert(widgetFactoryLine.rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+						if (regex.widgetFactoryEnd.test(widgetFactoryLine.text)) {
+							let newWidgetFactoryLine = widgetFactoryLine.text;
+							if (/([ ]*}[ ]*\))/g.test(newWidgetFactoryLine)) {
+								newWidgetFactoryLine = widgetFactoryLine.text.replace(/([ ]*}[ ]*\))/g, `, properties })`);
+							}
+							else if (/(\([ ]*\))/g.test(newWidgetFactoryLine)) {
+								newWidgetFactoryLine = widgetFactoryLine.text.replace(/(\([ ]*\))/g, `({ properties })`);
+							}
+							editBuilder.replace(widgetFactoryLine.range, newWidgetFactoryLine);
+							editBuilder.insert(widgetFactoryLine.rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+						}
+						else {
+							const widgetFactoryEndLine = findLine(document, regex.widgetFactoryEnd);
+							if (widgetFactoryEndLine) {
+								const lineBefore = document.lineAt(widgetFactoryEndLine.lineNumber - 1);
+								editBuilder.insert(lineBefore.range.end, ',');
+								editBuilder.insert(widgetFactoryEndLine.rangeIncludingLineBreak.start, '\tproperties\r\n');
+								editBuilder.insert(widgetFactoryEndLine.rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+							}
+						}
 					}
 				});
 			}
