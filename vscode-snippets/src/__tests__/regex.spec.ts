@@ -1,0 +1,289 @@
+import { regexFactory } from '../regex';
+
+describe('regex', () => {
+	let regex: ReturnType<typeof regexFactory>;
+	beforeEach(() => {
+		regex = regexFactory();
+	});
+
+	describe('vdom import', () => {
+		const singleImport = 'import { create } from \'@dojo/framework/core/vdom\';';
+		const multiImport = 'import { create, tsx } from \'@dojo/framework/core/vdom\';';
+
+		it('matches single import', () => {
+			expect(regex.vdomImport.test(singleImport)).toBeTruthy();
+		});
+		it('matches multi import', () => {
+			expect(regex.vdomImport.test(multiImport)).toBeTruthy();
+		});
+	});
+
+	describe('import', () => {
+		const singleImport = 'import { create } from \'@dojo/framework/core/vdom\';';
+		const multiImport = 'import { create, tsx } from \'@dojo/framework/core/vdom\';';
+		const defaultImport = 'import theme from \'@dojo/framework/core/middleware/theme\';';
+		const mixedImport = 'import theme, { ThemedProperties } from \'@dojo/framework/core/middleware/theme\';';
+
+		it('matches single import', () => {
+			expect(regex.importLine.test(singleImport)).toBeTruthy();
+		});
+		it('matches multi import', () => {
+			expect(regex.importLine.test(multiImport)).toBeTruthy();
+		});
+		it('matches default import', () => {
+			expect(regex.importLine.test(defaultImport)).toBeTruthy();
+		});
+		it('matches mixed import', () => {
+			expect(regex.importLine.test(mixedImport)).toBeTruthy();
+		});
+	});
+
+	describe('create', () => {
+		const emptyCreate = `const factory = create();`;
+		const flatCreate = `const factory = create({ i18n });`;
+		const multiLineCreate = `const factory = create({`;
+		const createEndLine = `});`;
+
+		describe('createLine', () => {
+			it('matches empty create line', () => {
+				expect(regex.createLine.test(emptyCreate)).toBeTruthy();
+			});
+			it('matches flat create line', () => {
+				expect(regex.createLine.test(flatCreate)).toBeTruthy();
+			});
+			it('matches multiline create starting line', () => {
+				expect(regex.createLine.test(multiLineCreate)).toBeTruthy();
+			});
+			it('does not match create end line', () => {
+				expect(regex.createLine.test(createEndLine)).toBeFalsy();
+			});
+		});
+
+		describe('createAloneLine', () => {
+			it('does not match empty create line', () => {
+				expect(regex.createAloneLine.test(emptyCreate)).toBeFalsy();
+			});
+			it('matches flat create line', () => {
+				expect(regex.createAloneLine.test(flatCreate)).toBeTruthy();
+			});
+			it('matches multiline create starting line', () => {
+				expect(regex.createAloneLine.test(multiLineCreate)).toBeTruthy();
+			});
+			it('does not match create end line', () => {
+				expect(regex.createAloneLine.test(createEndLine)).toBeFalsy();
+			});
+		});
+
+		describe('createLineEnd', () => {
+			it('matches empty create line', () => {
+				expect(regex.createLineEnd.test(emptyCreate)).toBeTruthy();
+			});
+			it('matches flat create line', () => {
+				expect(regex.createLineEnd.test(flatCreate)).toBeTruthy();
+			});
+			it('does not match multiline create starting line', () => {
+				expect(regex.createLineEnd.test(multiLineCreate)).toBeFalsy();
+			});
+			it('matches create end line', () => {
+				expect(regex.createLineEnd.test(createEndLine)).toBeTruthy();
+			});
+		});
+	});
+
+	describe('widget factory', () => {
+		const defaultExportSingleLine = `export default factory(function WidgetName({ middleware: { theme }, children }) {`;
+		const defaultExportSingleLineNoMiddleware = `export default factory(function WidgetName({ children }) {`;
+		const defaultExportMultiLine = `export default factory(function WidgetName({`;
+		const exportVerboseSingleLine = `export const WidgetName = factory(function WidgetName({ middleware: { theme }, children }) {`;
+		const exportVerboseSingleLineNoMiddleware = `export const WidgetName = factory(function WidgetName({ children }) {`;
+		const exportVerboseMultiLine = `export const WidgetName = factory(function WidgetName({`;
+		const exportSingleLine = `export const WidgetName = factory(({ middleware: { theme }, children }) => {`;
+		const exportSingleLineNoMiddleware = `export const WidgetName = factory(({ children }) => {`;
+		const exportMultiLine = `export const WidgetName = factory(({`;
+		const middlewareAlone = `\tmiddleware: { theme },`;
+		const middlewareAloneMultiLine = `\tmiddleware: {`;
+		const nonExportSingleLine = `\tconst formMiddleware = factory(function Form({ middleware: { icache } }): FormMiddleware<S> {`;
+		const nonExportSingleLineNoMiddleware = `\tconst formMiddleware = factory(function Form(): FormMiddleware<S> {`;
+		const nonExportMultiLine = `\tconst formMiddleware = factory(function Form({`;
+
+		describe('widgetFactoryStart', () => {
+			it('matches default export single line', () => {
+				expect(regex.widgetFactoryStart.test(defaultExportSingleLine)).toBeTruthy();
+			});
+			it('matches default export single line with no middleware', () => {
+				expect(regex.widgetFactoryStart.test(defaultExportSingleLineNoMiddleware)).toBeTruthy();
+			});
+			it('matches default export multi line', () => {
+				expect(regex.widgetFactoryStart.test(defaultExportMultiLine)).toBeTruthy();
+			});
+			it('matches verbose export single line', () => {
+				expect(regex.widgetFactoryStart.test(exportVerboseSingleLine)).toBeTruthy();
+			});
+			it('matches verbose export single line with no middleware', () => {
+				expect(regex.widgetFactoryStart.test(exportVerboseSingleLineNoMiddleware)).toBeTruthy();
+			});
+			it('matches verbose export multi line', () => {
+				expect(regex.widgetFactoryStart.test(exportVerboseMultiLine)).toBeTruthy();
+			});
+			it('matches export single line', () => {
+				expect(regex.widgetFactoryStart.test(exportSingleLine)).toBeTruthy();
+			});
+			it('matches export single line with no middleware', () => {
+				expect(regex.widgetFactoryStart.test(exportSingleLineNoMiddleware)).toBeTruthy();
+			});
+			it('matches export multi line', () => {
+				expect(regex.widgetFactoryStart.test(exportMultiLine)).toBeTruthy();
+			});
+			it('does not match middleware alone single line', () => {
+				expect(regex.widgetFactoryStart.test(middlewareAlone)).toBeFalsy();
+			});
+			it('does not match middleware alone multi line', () => {
+				expect(regex.widgetFactoryStart.test(middlewareAloneMultiLine)).toBeFalsy();
+			});
+			it('matches non-export single line', () => {
+				expect(regex.widgetFactoryStart.test(nonExportSingleLine)).toBeTruthy();
+			});
+			it('matches non-export single line with no middleware', () => {
+				expect(regex.widgetFactoryStart.test(nonExportSingleLineNoMiddleware)).toBeTruthy();
+			});
+			it('matches non-export multi line', () => {
+				expect(regex.widgetFactoryStart.test(nonExportMultiLine)).toBeTruthy();
+			});
+		});
+
+		describe('widgetFactoryEnd', () => {
+			it('matches default export single line', () => {
+				expect(regex.widgetFactoryEnd.test(defaultExportSingleLine)).toBeTruthy();
+			});
+			it('matches default export single line with no middleware', () => {
+				expect(regex.widgetFactoryEnd.test(defaultExportSingleLineNoMiddleware)).toBeTruthy();
+			});
+			it('does not match default export multi line', () => {
+				expect(regex.widgetFactoryEnd.test(defaultExportMultiLine)).toBeFalsy();
+			});
+			it('matches verbose export single line', () => {
+				expect(regex.widgetFactoryEnd.test(exportVerboseSingleLine)).toBeTruthy();
+			});
+			it('matches verbose export single line with no middleware', () => {
+				expect(regex.widgetFactoryEnd.test(exportVerboseSingleLineNoMiddleware)).toBeTruthy();
+			});
+			it('does not match verbose export multi line', () => {
+				expect(regex.widgetFactoryEnd.test(exportVerboseMultiLine)).toBeFalsy();
+			});
+			it('matches export single line', () => {
+				expect(regex.widgetFactoryEnd.test(exportSingleLine)).toBeTruthy();
+			});
+			it('matches export single line with no middleware', () => {
+				expect(regex.widgetFactoryEnd.test(exportSingleLineNoMiddleware)).toBeTruthy();
+			});
+			it('does not match export multi line', () => {
+				expect(regex.widgetFactoryEnd.test(exportMultiLine)).toBeFalsy();
+			});
+			it('does not match middleware alone single line', () => {
+				expect(regex.widgetFactoryEnd.test(middlewareAlone)).toBeFalsy();
+			});
+			it('does not match middleware alone multi line', () => {
+				expect(regex.widgetFactoryEnd.test(middlewareAloneMultiLine)).toBeFalsy();
+			});
+			it('matches non-export single line', () => {
+				expect(regex.widgetFactoryEnd.test(nonExportSingleLine)).toBeTruthy();
+			});
+			it('matches non-export single line with no middleware', () => {
+				expect(regex.widgetFactoryEnd.test(nonExportSingleLineNoMiddleware)).toBeTruthy();
+			});
+			it('does not match non-export multi line', () => {
+				expect(regex.widgetFactoryEnd.test(nonExportMultiLine)).toBeFalsy();
+			});
+		});
+
+		describe('widgetFactoryReplace', () => {
+			it('matches default export single line', () => {
+				expect(regex.widgetFactoryReplace.test(defaultExportSingleLine)).toBeTruthy();
+			});
+			it('does not match default export single line with no middleware', () => {
+				expect(regex.widgetFactoryReplace.test(defaultExportSingleLineNoMiddleware)).toBeFalsy();
+			});
+			it('does not match default export multi line', () => {
+				expect(regex.widgetFactoryReplace.test(defaultExportMultiLine)).toBeFalsy();
+			});
+			it('matches verbose export single line', () => {
+				expect(regex.widgetFactoryReplace.test(exportVerboseSingleLine)).toBeTruthy();
+			});
+			it('does not match verbose export single line with no middleware', () => {
+				expect(regex.widgetFactoryReplace.test(exportVerboseSingleLineNoMiddleware)).toBeFalsy();
+			});
+			it('does not match verbose export multi line', () => {
+				expect(regex.widgetFactoryReplace.test(exportVerboseMultiLine)).toBeFalsy();
+			});
+			it('matches export single line', () => {
+				expect(regex.widgetFactoryReplace.test(exportSingleLine)).toBeTruthy();
+			});
+			it('does not match export single line with no middleware', () => {
+				expect(regex.widgetFactoryReplace.test(exportSingleLineNoMiddleware)).toBeFalsy();
+			});
+			it('does not match export multi line', () => {
+				expect(regex.widgetFactoryReplace.test(exportMultiLine)).toBeFalsy();
+			});
+			it('matches middleware alone single line', () => {
+				expect(regex.widgetFactoryReplace.test(middlewareAlone)).toBeTruthy();
+			});
+			it('matches middleware alone multi line', () => {
+				expect(regex.widgetFactoryReplace.test(middlewareAloneMultiLine)).toBeTruthy();
+			});
+			it('matches non-export single line', () => {
+				expect(regex.widgetFactoryReplace.test(nonExportSingleLine)).toBeTruthy();
+			});
+			it('does not match non-export single line with no middleware', () => {
+				expect(regex.widgetFactoryReplace.test(nonExportSingleLineNoMiddleware)).toBeFalsy();
+			});
+			it('does not match non-export multi line', () => {
+				expect(regex.widgetFactoryReplace.test(nonExportMultiLine)).toBeFalsy();
+			});
+		});
+
+		describe('widgetFactoryMiddlewareAlone', () => {
+			it('does not match default export single line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(defaultExportSingleLine)).toBeFalsy();
+			});
+			it('does not match default export single line with no middleware', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(defaultExportSingleLineNoMiddleware)).toBeFalsy();
+			});
+			it('does not match default export multi line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(defaultExportMultiLine)).toBeFalsy();
+			});
+			it('does not match verbose export single line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(exportVerboseSingleLine)).toBeFalsy();
+			});
+			it('does not match verbose export single line with no middleware', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(exportVerboseSingleLineNoMiddleware)).toBeFalsy();
+			});
+			it('does not match verbose export multi line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(exportVerboseMultiLine)).toBeFalsy();
+			});
+			it('does not match export single line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(exportSingleLine)).toBeFalsy();
+			});
+			it('does not match export single line with no middleware', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(exportSingleLineNoMiddleware)).toBeFalsy();
+			});
+			it('does not match export multi line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(exportMultiLine)).toBeFalsy();
+			});
+			it('does not match middleware alone single line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(middlewareAlone)).toBeFalsy();
+			});
+			it('matches middleware alone multi line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(middlewareAloneMultiLine)).toBeTruthy();
+			});
+			it('does not match non-export single line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(nonExportSingleLine)).toBeFalsy();
+			});
+			it('does not match non-export single line with no middleware', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(nonExportSingleLineNoMiddleware)).toBeFalsy();
+			});
+			it('does not match non-export multi line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(nonExportMultiLine)).toBeFalsy();
+			});
+		});
+	});
+});

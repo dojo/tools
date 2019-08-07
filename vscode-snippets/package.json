@@ -129,11 +129,54 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"prettier": "prettier --write \"./src/**\""
+		"prettier": "prettier --write \"./src/**\"",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --testResultsProcessor='jest-junit'"
 	},
+  "jest": {
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/out/"
+    ],
+    "testURL": "http://localhost/",
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/out/"
+    ],
+    "testRegex": "((\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "globals": {
+      "ts-jest": {
+        "diagnostics": {
+          "ignoreCodes": [
+            151001
+          ]
+        }
+      }
+    }
+  },
+  "jest-junit": {
+    "suiteName": "ui tests",
+    "output": "output/info/junit.xml",
+    "usePathForSuiteName": "true"
+  },
 	"devDependencies": {
+		"@types/jest": "^24.0.17",
 		"@types/node": "10.14.14",
+		"jest": "^24.8.0",
 		"prettier": "1.18.2",
+		"ts-jest": "^24.0.2",
 		"typescript": "3.4.5",
 		"vscode": "1.1.36"
 	},
