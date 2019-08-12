@@ -1,6 +1,6 @@
 {
 	"name": "vscode-dojo-snippets",
-	"displayName": "vscode-dojo-snippets",
+	"displayName": "Dojo Snippets (Version 6)",
 	"description": "",
 	"icon": "images/dojo-logo.png",
 	"galleryBanner": {
@@ -8,9 +8,10 @@
 		"theme": "dark"
 	},
 	"license": "MIT",
+	"publisher": "Dojo",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/KaneFreeman/vscode-dojo-snippets.git"
+		"url": "https://github.com/dojo/tools.git"
 	},
 	"keywords": [
 		"Dojo",

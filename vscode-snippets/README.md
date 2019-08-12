@@ -2,9 +2,9 @@
 
 This extension for Visual Studio Code adds snippets and supporting commands for Dojo 6+.
 
-![Use Extension](images/use-extension.gif)
+![Use Extension](https://github.com/dojo/tools/raw/master/vscode-snippets/images/use-extension.gif)
 
-See the [CHANGELOG](CHANGELOG.md) for the latest changes
+See the [CHANGELOG](https://github.com/dojo/tools/blob/master/vscode-snippets/CHANGELOG.md) for the latest changes
 
 ## Usage
 
