@@ -21,7 +21,7 @@ function addToWidgetFactory(
 			if (/([ ]*}[ ]*\))/g.test(newWidgetFactoryLine)) {
 				newWidgetFactoryLine = widgetFactoryLine.text.replace(/([ ]*}[ ]*\))/g, `, ${property} })`);
 			}
-			else if (/(\([ ]*\))/g.test(newWidgetFactoryLine)) {
+			else {
 				newWidgetFactoryLine = widgetFactoryLine.text.replace(/(\([ ]*\))/g, `({ ${property} })`);
 			}
 			editBuilder.replace(widgetFactoryLine.range, newWidgetFactoryLine);
@@ -33,18 +33,19 @@ function addToWidgetFactory(
 				const lineBefore = document.lineAt(widgetFactoryEndLine.lineNumber - 1);
 				editBuilder.insert(lineBefore.range.end, ',');
 				editBuilder.insert(widgetFactoryEndLine.rangeIncludingLineBreak.start, `${tab}${property}\r\n`);
-				callback(widgetFactoryLine);
+				callback(widgetFactoryEndLine);
 			}
 		}
 	}
 }
 
-export const addProperties: Callback = ({ document, editBuilder, options }) => {
+export const addProperties: Callback = (editor, edit) => {
+	const document = editor.document;
 	const regex = regexFactory();
 	const file = parse(document.fileName);
 	const lastImportStatement = findLine(document, regex.importLine, { reverse: true });
 	if (lastImportStatement) {
-		editBuilder.insert(
+		edit.insert(
 			lastImportStatement.rangeIncludingLineBreak.end,
 			`\r\ninterface ${file.name}Properties {\r\n\r\n}\r\n`
 		);
@@ -57,22 +58,22 @@ export const addProperties: Callback = ({ document, editBuilder, options }) => {
 			line = createLine;
 		}
 		else {
-			const createEndLine = findLine(document, regex.createLineEnd, { startAt: createLine.lineNumber });
-			if (createEndLine) {
+			const createEndLine = findLine(document, regex.createLineEnd, { startAt: createLine.lineNumber, endTest: /export/g });
+			if (createEndLine && !/export/g.test(createEndLine.text)) {
 				line = createEndLine;
 			}
 		}
 		if (line) {
 			const newCreateLine = line.text.replace(');', `).properties<${file.name}Properties>();`);
-			editBuilder.replace(line.range, newCreateLine);
+			edit.replace(line.range, newCreateLine);
 		}
 	}
 
-	addToWidgetFactory(document, editBuilder, options, 'properties', (widgetFactoryEndLine) => {
-		editBuilder.insert(widgetFactoryEndLine.rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+	addToWidgetFactory(document, edit, editor.options, 'properties', (widgetFactoryEndLine) => {
+		edit.insert(widgetFactoryEndLine.rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
 	});
 }
 
-export const addChildren: Callback = ({ document, editBuilder, selection, options }) => {
-	addToWidgetFactory(document, editBuilder, options, 'children', () => editBuilder.insert(selection.anchor, 'children()'));
+export const addChildren: Callback = (editor, edit) => {
+	addToWidgetFactory(editor.document, edit, editor.options, 'children', () => edit.insert(editor.selection.anchor, 'children()'));
 }

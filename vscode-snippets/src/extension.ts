@@ -1,38 +1,23 @@
 import * as vscode from 'vscode';
 
-import { Callback } from './interface';
 import { addMiddleware } from './middleware';
 import { addProperties, addChildren } from './widget-factory';
 
-function addEditorCommand(callback: Callback) {
-	return () => {
-		const editor = vscode.window.activeTextEditor;
-		if (editor) {
-			editor.edit((editBuilder) => callback({
-				document: editor.document,
-				editBuilder,
-				selection: editor.selection,
-				options: editor.options
-			}));
-		}
-	};
-}
-
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
-		vscode.commands.registerCommand('dojo.addi18n', addEditorCommand(addMiddleware('i18n'))),
-		vscode.commands.registerCommand('dojo.addTheme', addEditorCommand(addMiddleware('theme'))),
-		vscode.commands.registerCommand('dojo.addBlock', addEditorCommand(addMiddleware('block'))),
-		vscode.commands.registerCommand('dojo.addBreakpoint', addEditorCommand(addMiddleware('breakpoint'))),
-		vscode.commands.registerCommand('dojo.addCache', addEditorCommand(addMiddleware('cache'))),
-		vscode.commands.registerCommand('dojo.addIcache', addEditorCommand(addMiddleware('icache'))),
-		vscode.commands.registerCommand('dojo.addFocus', addEditorCommand(addMiddleware('focus'))),
-		vscode.commands.registerCommand('dojo.addIntersection', addEditorCommand(addMiddleware('intersection'))),
-		vscode.commands.registerCommand('dojo.addResize', addEditorCommand(addMiddleware('resize'))),
-		vscode.commands.registerCommand('dojo.addValidity', addEditorCommand(addMiddleware('validity'))),
-		vscode.commands.registerCommand('dojo.addStore', addEditorCommand(addMiddleware('store'))),
-		vscode.commands.registerCommand('dojo.addDimensions', addEditorCommand(addMiddleware('dimensions'))),
-		vscode.commands.registerCommand('dojo.addProperties', addEditorCommand(addProperties)),
-		vscode.commands.registerCommand('dojo.addChildren', addEditorCommand(addChildren))
+		vscode.commands.registerTextEditorCommand('dojo.addi18n', addMiddleware('i18n')),
+		vscode.commands.registerTextEditorCommand('dojo.addTheme', addMiddleware('theme')),
+		vscode.commands.registerTextEditorCommand('dojo.addBlock', addMiddleware('block')),
+		vscode.commands.registerTextEditorCommand('dojo.addBreakpoint', addMiddleware('breakpoint')),
+		vscode.commands.registerTextEditorCommand('dojo.addCache', addMiddleware('cache')),
+		vscode.commands.registerTextEditorCommand('dojo.addIcache', addMiddleware('icache')),
+		vscode.commands.registerTextEditorCommand('dojo.addFocus', addMiddleware('focus')),
+		vscode.commands.registerTextEditorCommand('dojo.addIntersection', addMiddleware('intersection')),
+		vscode.commands.registerTextEditorCommand('dojo.addResize', addMiddleware('resize')),
+		vscode.commands.registerTextEditorCommand('dojo.addValidity', addMiddleware('validity')),
+		vscode.commands.registerTextEditorCommand('dojo.addStore', addMiddleware('store')),
+		vscode.commands.registerTextEditorCommand('dojo.addDimensions', addMiddleware('dimensions')),
+		vscode.commands.registerTextEditorCommand('dojo.addProperties', addProperties),
+		vscode.commands.registerTextEditorCommand('dojo.addChildren', addChildren)
 	);
 }

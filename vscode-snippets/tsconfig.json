@@ -5,7 +5,17 @@
 		"outDir": "out",
 		"sourceMap": true,
 		"strict": true,
-		"rootDir": "src"
+		"rootDir": ".",
+		"esModuleInterop": true,
+		"types": [
+			"node",
+			"jest"
+		]
 	},
-	"exclude": ["node_modules", ".vscode-test"]
+	"exclude": [
+		"node_modules",
+		".vscode-test",
+		"out",
+		"**/__mocks__/*"
+	]
 }
