@@ -40,7 +40,8 @@
 		"onCommand:dojo.addValidity",
 		"onCommand:dojo.addStore",
 		"onCommand:dojo.addDimensions",
-		"onCommand:dojo.addProperties"
+		"onCommand:dojo.addProperties",
+		"onCommand:dojo.addChildren"
 	],
 	"contributes": {
 		"snippets": [
@@ -60,67 +61,72 @@
 		"commands": [
 			{
 				"command": "dojo.addi18n",
-				"title": "Dojo: Add i18n middleware",
+				"title": "Add i18n middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addTheme",
-				"title": "Dojo: Add theme middleware",
+				"title": "Add theme middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addBlock",
-				"title": "Dojo: Add block middleware",
+				"title": "Add block middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addBreakpoint",
-				"title": "Dojo: Add breakpoint middleware",
+				"title": "Add breakpoint middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addCache",
-				"title": "Dojo: Add cache middleware",
+				"title": "Add cache middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addIcache",
-				"title": "Dojo: Add icache middleware",
+				"title": "Add icache middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addFocus",
-				"title": "Dojo: Add focus middleware",
+				"title": "Add focus middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addIntersection",
-				"title": "Dojo: Add intersection middleware",
+				"title": "Add intersection middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addResize",
-				"title": "Dojo: Add resize middleware",
+				"title": "Add resize middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addValidity",
-				"title": "Dojo: Add validity middleware",
+				"title": "Add validity middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addStore",
-				"title": "Dojo: Add store middleware",
+				"title": "Add store middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addDimensions",
-				"title": "Dojo: Add dimensions middleware",
+				"title": "Add dimensions middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addProperties",
-				"title": "Dojo: Add properties to widget",
+				"title": "Add properties to widget",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addChildren",
+				"title": "Add children to widget",
 				"category": "Dojo"
 			}
 		]
@@ -130,53 +136,53 @@
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
 		"prettier": "prettier --write \"./src/**\"",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:ci": "jest --ci --testResultsProcessor='jest-junit'"
+		"test": "jest",
+		"test:coverage": "jest --coverage",
+		"test:ci": "jest --ci --testResultsProcessor='jest-junit'"
 	},
-  "jest": {
-    "coveragePathIgnorePatterns": [
-      "/node_modules/",
-      "/out/"
-    ],
-    "testURL": "http://localhost/",
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/out/"
-    ],
-    "testRegex": "((\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ],
-    "globals": {
-      "ts-jest": {
-        "diagnostics": {
-          "ignoreCodes": [
-            151001
-          ]
-        }
-      }
-    }
-  },
-  "jest-junit": {
-    "suiteName": "ui tests",
-    "output": "output/info/junit.xml",
-    "usePathForSuiteName": "true"
-  },
+	"jest": {
+		"coveragePathIgnorePatterns": [
+			"/node_modules/",
+			"/out/"
+		],
+		"testURL": "http://localhost/",
+		"transform": {
+			"^.+\\.tsx?$": "ts-jest"
+		},
+		"testPathIgnorePatterns": [
+			"/node_modules/",
+			"/out/"
+		],
+		"testRegex": "((\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+		"moduleFileExtensions": [
+			"ts",
+			"tsx",
+			"js",
+			"jsx",
+			"json",
+			"node"
+		],
+		"globals": {
+			"ts-jest": {
+				"diagnostics": {
+					"ignoreCodes": [
+						151001
+					]
+				}
+			}
+		}
+	},
+	"jest-junit": {
+		"suiteName": "ui tests",
+		"output": "output/info/junit.xml",
+		"usePathForSuiteName": "true"
+	},
 	"devDependencies": {
-		"@types/jest": "^24.0.17",
+		"@types/jest": "24.0.17",
 		"@types/node": "10.14.14",
-		"jest": "^24.8.0",
+		"jest": "24.8.0",
 		"prettier": "1.18.2",
-		"ts-jest": "^24.0.2",
+		"ts-jest": "24.0.2",
 		"typescript": "3.4.5",
 		"vscode": "1.1.36"
 	},

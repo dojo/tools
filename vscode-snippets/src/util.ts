@@ -23,3 +23,11 @@ export function findLine(document: vscode.TextDocument, test: RegExp, options: {
 		}
 	}
 }
+
+export function getTab(options: vscode.TextEditorOptions) {
+	let tab = '\t';
+	if (options.insertSpaces) {
+		tab = ' '.repeat(Number(options.tabSize));
+	}
+	return tab;
+}

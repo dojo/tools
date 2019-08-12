@@ -28,6 +28,7 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 | Dojo: Add store middleware           | Imports and configures store middleware for use           |
 | Dojo: Add dimensions middleware      | Imports and configures dimensions middleware for use      |
 | Dojo: Add properties to widget       | Creates properties interface and configures in widget     |
+| Dojo: Add children to widget         | Configures children in widget and inserts at cursor       |
 
 ### Commands
 
