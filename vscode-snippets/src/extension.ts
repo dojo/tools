@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { sep, join } from 'path';
-import { readJsonSync } from 'fs-extra';
+import { readFileSync } from 'fs';
 
 import { addMiddleware } from './middleware';
 import { addProperties, addChildren } from './widget-factory';
@@ -25,7 +25,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerCommand('dojo.runTests', () => {
 			const editor = vscode.window.activeTextEditor;
 			if (editor) {
-				const packageJson = readJsonSync(join(vscode.workspace.rootPath || '', 'package.json'));
+				const packageJson = JSON.parse(readFileSync(join(vscode.workspace.rootPath || '', 'package.json'), 'utf8'));
 				let runner = 'intern';
 				if (packageJson.devDependencies.hasOwnProperty('jest')) {
 					runner = 'jest';

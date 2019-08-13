@@ -4,6 +4,10 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [6.0.5]
+
+- **Bugfix** - Remove fs-extra as dependency
+
 ## [6.0.4]
 
 - **New Feature** - Add test runner command, menu item and shortcut (Ctrl+Shift+T on windows or Cmd+Shift+T on mac) for intern and jest.
