@@ -11,6 +11,9 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ## [6.0.4]
 
 - **New Feature** - Add test runner command, menu item and shortcut (Ctrl+Shift+T on windows or Cmd+Shift+T on mac) for intern and jest.
+  | Command                              | Purpose                                                           | Shortcut           |
+  | -------------------------------------| ----------------------------------------------------------------- | ------------------ |
+  | Dojo: Run test                       | Runs the selected test, test suite or test file in intern or jest | `Ctrl + Shift + T` |
 
 ## [6.0.3]
 
