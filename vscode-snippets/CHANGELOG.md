@@ -4,6 +4,10 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [6.0.3]
+
+- **Bugfix** - Fix broken commands
+
 ## [6.0.2]
 
 - **New Feature** - Add w/v (non-tsx) versions of tsx snippets
