@@ -146,5 +146,189 @@
       "});",
       ""
     ]
+  },
+  "Dojo Widget": {
+    "prefix": "d-widget",
+    "description": "Dojo widget",
+    "body": [
+      "import { create } from '@dojo/framework/core/vdom';",
+      "",
+      "const factory = create();",
+      "",
+      "export default factory(function $TM_FILENAME_BASE() {",
+      "\treturn $0;",
+      "});",
+      ""
+    ]
+  },
+  "Dojo Widget with Theme Middleware": {
+    "prefix": "d-widget-theme",
+    "description": "Dojo widget with theme middleware",
+    "body": [
+      "import { create } from '@dojo/framework/core/vdom';",
+      "import theme from '@dojo/framework/core/middleware/theme';",
+      "",
+      "import * as css from './$TM_FILENAME_BASE.m.css';",
+      "",
+      "const factory = create({ theme });",
+      "",
+      "export default factory(function $TM_FILENAME_BASE({ middleware: { theme } }) {",
+      "\tconst themedCss = theme.classes(css);",
+      "\treturn $0;",
+      "});",
+      ""
+    ]
+  },
+  "Dojo Widget with i18n Middleware": {
+    "prefix": "d-widget-i18n",
+    "description": "Dojo widget with i18n middleware",
+    "body": [
+      "import { create } from '@dojo/framework/core/vdom';",
+      "import i18n from '@dojo/framework/core/middleware/i18n';",
+      "",
+      "import bundle from './$TM_FILENAME_BASE.nls';",
+      "",
+      "const factory = create({ i18n });",
+      "",
+      "export default factory(function $TM_FILENAME_BASE({ middleware: { i18n } }) {",
+      "\tconst { messages } = i18n.localize(bundle);",
+      "\treturn $0;",
+      "});",
+      ""
+    ]
+  },
+  "Dojo Widget with Properties": {
+    "prefix": "d-widget-properties",
+    "description": "Dojo widget with properties",
+    "body": [
+      "import { create } from '@dojo/framework/core/vdom';",
+      "",
+      "export interface ${TM_FILENAME_BASE}Properties {",
+      "\t${1:property: string}",
+      "}",
+      "",
+      "const factory = create().properties<${TM_FILENAME_BASE}Properties>();",
+      "",
+      "export default factory(function $TM_FILENAME_BASE({ properties }){",
+      "\tconst { ${2:property} } = properties();",
+      "\treturn $0;",
+      "});",
+      ""
+    ]
+  },
+  "Dojo Outlet": {
+    "prefix": "d-outlet",
+    "description": "Dojo outlet",
+    "body": [
+      "w(Outlet, {",
+      "\tid: '${1:outlet}',",
+      "\tkey: '${1:outlet}Outlet',",
+      "\trenderer: () => {",
+      "\t\treturn $0;",
+      "\t}",
+      "})"
+    ]
+  },
+  "Dojo Outlet with Params": {
+    "prefix": "d-outlet-params",
+    "description": "Dojo outlet with params",
+    "body": [
+      "w(Outlet, {",
+      "\tid: '${1:outlet}',",
+      "\tkey: '${1:outlet}Outlet',",
+      "\trenderer: ({ params: { ${2:paramName} } }) => {",
+      "\t\treturn $0;",
+      "\t}",
+      "})"
+    ]
+  },
+  "Dojo Outlet Exact": {
+    "prefix": "d-outlet-exact",
+    "description": "Dojo outlet exact",
+    "body": [
+      "w(Outlet, {",
+      "\tid: '${1:outlet}',",
+      "\tkey: '${1:outlet}Outlet',",
+      "\trenderer: ({ isExact }) => {",
+      "\t\tif (isExact()) {",
+      "\t\t\treturn $0;",
+      "\t\t}",
+      "\t}",
+      "})"
+    ]
+  },
+  "Jest Widget Test File": {
+    "prefix": "d-test-widget-jest",
+    "description": "Jest spec file for Dojo widget",
+    "body": [
+      "import assertionTemplate from '@dojo/framework/testing/assertionTemplate';",
+      "import harness from '@dojo/framework/testing/harness';",
+      "import { w, v } from '@dojo/framework/core/vdom';",
+      "",
+      "import ${TM_FILENAME_BASE/\\.spec//g} from '${1:./${TM_FILENAME_BASE/\\.spec//g}}';",
+      "",
+      "describe('${TM_FILENAME_BASE/\\.spec//g}', () => {",
+      "\tconst baseAssertion = assertionTemplate(() => ${2:v('div', {\\}, ['Widget Content'])});",
+      "",
+      "\tit('renders', () => {",
+      "\t\tconst h = harness(() => w(${TM_FILENAME_BASE/\\.spec//g}, {}));",
+      "",
+      "\t\th.expect(baseAssertion);$0",
+      "\t});",
+      "});",
+      ""   
+    ]
+  },
+  "Intern Widget BDD Test File": {
+    "prefix": "d-test-widget-intern-bdd",
+    "description": "Intern BDD test file for Dojo widget",
+    "body": [
+      "const { describe, it } = intern.getInterface('bdd');",
+      "",
+      "import assertionTemplate from '@dojo/framework/testing/assertionTemplate';",
+      "import harness from '@dojo/framework/testing/harness';",
+      "import { w, v } from '@dojo/framework/core/vdom';",
+      "",
+      "import ${TM_FILENAME_BASE/\\.spec//g} from '${1:./${TM_FILENAME_BASE/\\.spec//g}}';",
+      "",
+      "describe('${TM_FILENAME_BASE/\\.spec//g}', () => {",
+      "\tconst baseAssertion = assertionTemplate(() => ${2:v('div', {\\}, ['Widget Content'])});",
+      "",
+      "\tit('renders', () => {",
+      "\t\tconst h = harness(() => w(${TM_FILENAME_BASE/\\.spec//g}, {}));",
+      "",
+      "\t\th.expect(baseAssertion);$0",
+      "\t});",
+      "});",
+      ""
+    ]
+  },
+  "Intern Widget Object Test File": {
+    "prefix": "d-test-widget-intern-object",
+    "description": "Intern Object test file for Dojo widget",
+    "body": [
+      "const { registerSuite } = intern.getInterface('object');",
+      "const { assert } = intern.getPlugin('chai');",
+      "",
+      "import assertionTemplate from '@dojo/framework/testing/assertionTemplate';",
+      "import harness from '@dojo/framework/testing/harness';",
+      "import { w, v } from '@dojo/framework/core/vdom';",
+      "",
+      "import ${TM_FILENAME_BASE/\\.spec//g} from '${1:./${TM_FILENAME_BASE/\\.spec//g}}';",
+      "",
+      "const baseAssertion = assertionTemplate(() => ${2:v('div', {\\}, ['Widget Content'])});",
+      "",
+      "registerSuite('${TM_FILENAME_BASE/\\.spec//g}', {",
+      "\ttests: {",
+      "\t\t'renders'() {",
+      "\t\t\tconst h = harness(() => w(${TM_FILENAME_BASE/\\.spec//g}, {}));",
+      "",
+      "\t\t\th.expect(baseAssertion);$0",
+      "\t\t}",
+      "\t}",
+      "});",
+      ""
+    ]
   }
 }
+
