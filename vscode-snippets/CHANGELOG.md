@@ -4,13 +4,17 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [6.0.4]
+
+- **New Feature** - Add test runner command, menu item and shortcut (Ctrl+Shift+T on windows or Cmd+Shift+T on mac) for intern and jest.
+
 ## [6.0.3]
 
-- **Bugfix** - Fix broken commands
+- **Bugfix** - Fix broken commands.
 
 ## [6.0.2]
 
-- **New Feature** - Add w/v (non-tsx) versions of tsx snippets
+- **New Feature** - Add w/v (non-tsx) versions of tsx snippets.
 
 ## [6.0.1]
 

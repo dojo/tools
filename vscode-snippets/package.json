@@ -1,7 +1,7 @@
 {
 	"name": "vscode-dojo-snippets",
 	"displayName": "Dojo Snippets (Version 6)",
-	"version": "6.0.3",
+	"version": "6.0.4",
 	"description": "Dojo 6+ snippets and supporting commands",
 	"icon": "images/dojo-logo.png",
 	"galleryBanner": {
@@ -42,7 +42,8 @@
 		"onCommand:dojo.addStore",
 		"onCommand:dojo.addDimensions",
 		"onCommand:dojo.addProperties",
-		"onCommand:dojo.addChildren"
+		"onCommand:dojo.addChildren",
+		"onCommand:dojo.runTests"
 	],
 	"contributes": {
 		"snippets": [
@@ -125,6 +126,29 @@
 				"command": "dojo.addChildren",
 				"title": "Add children to widget",
 				"category": "Dojo"
+			},
+			{
+				"key": "ctrl+shift+t",
+				"command": "dojo.runTests",
+				"title": "Run tests",
+				"category": "Dojo"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"when": "resourceFilename =~ /\\.tsx?/",
+					"command": "dojo.runTests",
+					"group": "Dojo"
+				}
+			]
+		},
+		"keybindings": [
+			{
+				"when": "resourceFilename =~ /\\.tsx?/",
+				"command": "dojo.runTests",
+				"key": "ctrl+shift+t",
+				"mac": "cmd++shift+t"
 			}
 		]
 	},
@@ -175,8 +199,10 @@
 		"usePathForSuiteName": "true"
 	},
 	"devDependencies": {
+		"@types/fs-extra": "8.0.0",
 		"@types/jest": "24.0.17",
 		"@types/node": "10.14.14",
+		"fs-extra": "8.1.0",
 		"jest": "24.8.0",
 		"prettier": "1.18.2",
 		"ts-jest": "24.0.2",
