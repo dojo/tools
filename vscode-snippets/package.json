@@ -43,7 +43,8 @@
 		"onCommand:dojo.addDimensions",
 		"onCommand:dojo.addProperties",
 		"onCommand:dojo.addChildren",
-		"onCommand:dojo.runTests"
+		"onCommand:dojo.runAllTests",
+		"onCommand:dojo.runTest"
 	],
 	"contributes": {
 		"snippets": [
@@ -129,8 +130,14 @@
 			},
 			{
 				"key": "ctrl+shift+t",
-				"command": "dojo.runTests",
-				"title": "Run tests",
+				"command": "dojo.runAllTests",
+				"title": "Run all tests",
+				"category": "Dojo"
+			},
+			{
+				"key": "ctrl+shift+t",
+				"command": "dojo.runTest",
+				"title": "Run test",
 				"category": "Dojo"
 			}
 		],
@@ -138,7 +145,12 @@
 			"editor/context": [
 				{
 					"when": "resourceFilename =~ /\\.tsx?/",
-					"command": "dojo.runTests",
+					"command": "dojo.runTest",
+					"group": "Dojo"
+				},
+				{
+					"when": "resourceFilename =~ /\\.tsx?/",
+					"command": "dojo.runAllTests",
 					"group": "Dojo"
 				}
 			]
@@ -146,9 +158,15 @@
 		"keybindings": [
 			{
 				"when": "resourceFilename =~ /\\.tsx?/",
-				"command": "dojo.runTests",
+				"command": "dojo.runTest",
 				"key": "ctrl+shift+t",
 				"mac": "cmd++shift+t"
+			},
+			{
+				"when": "resourceFilename =~ /\\.tsx?/",
+				"command": "dojo.runAllTests",
+				"key": "ctrl+shift+alt+t",
+				"mac": "cmd++shift+alt+t"
 			}
 		]
 	},

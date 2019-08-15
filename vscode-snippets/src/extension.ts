@@ -1,10 +1,8 @@
 import * as vscode from 'vscode';
-import { sep, join } from 'path';
-import { readFileSync } from 'fs';
 
 import { addMiddleware } from './middleware';
 import { addProperties, addChildren } from './widget-factory';
-import { findLine } from './util';
+import { runTests } from './testRunner';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
@@ -22,61 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.commands.registerTextEditorCommand('dojo.addDimensions', addMiddleware('dimensions')),
 		vscode.commands.registerTextEditorCommand('dojo.addProperties', addProperties),
 		vscode.commands.registerTextEditorCommand('dojo.addChildren', addChildren),
-		vscode.commands.registerCommand('dojo.runTests', () => {
-			const editor = vscode.window.activeTextEditor;
-			if (editor) {
-				const packageJson = JSON.parse(readFileSync(join(vscode.workspace.rootPath || '', 'package.json'), 'utf8'));
-				let runner = 'intern';
-				if (packageJson.devDependencies.hasOwnProperty('jest')) {
-					runner = 'jest';
-				}
-
-				let terminal: vscode.Terminal | undefined;
-				if (vscode.window.activeTerminal) {
-					terminal = vscode.window.activeTerminal;
-				}
-				else {
-					terminal = vscode.window.createTerminal();
-				}
-				terminal.show();
-				let fileName = editor.document.fileName
-					.replace(vscode.workspace.rootPath + sep || '', '')
-					.replace(/\\/g, '/');
-
-				let regex = /(?:it|describe)[ ]*\(['"]([\s\S]+)['"]/g;
-				if (runner === 'intern' && findLine(editor.document, /intern\.getInterface\('object'\)/g)) {
-					regex = /^[ \t]*(?:['"]{1}([\s\S]+)['"]{1}|([a-zA-Z0-9_]+))(?:\:|\(\))[ ]*{/g;
-				}
-
-				const testLine = findLine(editor.document, regex, {
-					reverse: true,
-					startAt: editor.selection.anchor.line
-				});
-				let test: string | undefined;
-				if (testLine) {
-					regex.lastIndex = 0;
-					const match = regex.exec(testLine.text);
-					if (match && match.length > 1) {
-						test = match[1];
-					}
-				}
-
-				if (runner === 'intern') {
-					fileName = `dist/dev/${fileName}`.replace(/\.tsx?/g, '.js')
-					if (test) {
-						terminal.sendText(`npx intern suites=${fileName} grep='${test}'`);
-					} else {
-						terminal.sendText(`npx intern suites=${fileName}`);
-					}
-				}
-				else {
-					if (test) {
-						terminal.sendText(`npx jest ${fileName} -t '${test}'`);
-					} else {
-						terminal.sendText(`npx jest ${fileName}`);
-					}
-				}
-			}
-		})
+		vscode.commands.registerCommand('dojo.runAllTests', () => runTests(true)),
+		vscode.commands.registerCommand('dojo.runTest', () => runTests())
 	);
 }
