@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 
-import { createDocument } from "./document";
+import { createDocument } from './document';
 
 import { addChildren, addProperties } from '../widget-factory';
 
@@ -16,7 +16,7 @@ describe('widget factory', () => {
 				character: 32
 			}
 		}
-	}	as vscode.TextEditor;
+	} as vscode.TextEditor;
 
 	const edit = {
 		replace: jest.fn(),
@@ -30,9 +30,9 @@ describe('widget factory', () => {
 	});
 
 	const documentEmpty = createDocument([
-		'import { tsx } from \'@dojo/framework/core/vdom\';',
+		"import { tsx } from '@dojo/framework/core/vdom';",
 		'',
-		'import * as css from \'./TestWidget.m.css\';',
+		"import * as css from './TestWidget.m.css';",
 		'',
 		'const factory = create();',
 		'',
@@ -46,10 +46,10 @@ describe('widget factory', () => {
 	]);
 
 	const documentSingleLine = createDocument([
-		'import { tsx } from \'@dojo/framework/core/vdom\';',
-		'import theme from \'@dojo/framework/core/middleware/theme\';',
+		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import theme from '@dojo/framework/core/middleware/theme';",
 		'',
-		'import * as css from \'./TestWidget.m.css\';',
+		"import * as css from './TestWidget.m.css';",
 		'',
 		'const factory = create({ theme });',
 		'',
@@ -63,10 +63,10 @@ describe('widget factory', () => {
 	]);
 
 	const documentMultiLine = createDocument([
-		'import { tsx } from \'@dojo/framework/core/vdom\';',
-		'import theme from \'@dojo/framework/core/middleware/theme\';',
+		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import theme from '@dojo/framework/core/middleware/theme';",
 		'',
-		'import * as css from \'./TestWidget.m.css\';',
+		"import * as css from './TestWidget.m.css';",
 		'',
 		'const factory = create({ theme });',
 		'',
@@ -84,10 +84,10 @@ describe('widget factory', () => {
 	]);
 
 	const documentMultiLineCreateMultiLine = createDocument([
-		'import { tsx } from \'@dojo/framework/core/vdom\';',
-		'import theme from \'@dojo/framework/core/middleware/theme\';',
+		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import theme from '@dojo/framework/core/middleware/theme';",
 		'',
-		'import * as css from \'./TestWidget.m.css\';',
+		"import * as css from './TestWidget.m.css';",
 		'',
 		'const factory = create({',
 		'\ttheme',
@@ -137,11 +137,27 @@ describe('widget factory', () => {
 
 			addProperties(editor, edit);
 
-			expect(edit.replace).toHaveBeenNthCalledWith(1, documentEmpty.lineAt(4).range, 'const factory = create().properties<TestWidgetProperties>();');
-			expect(edit.replace).toHaveBeenNthCalledWith(2, documentEmpty.lineAt(6).range, 'export default factory(function TestWidget({ properties }) {');
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentEmpty.lineAt(4).range,
+				'const factory = create().properties<TestWidgetProperties>();'
+			);
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				2,
+				documentEmpty.lineAt(6).range,
+				'export default factory(function TestWidget({ properties }) {'
+			);
 			expect(edit.replace).toHaveBeenCalledTimes(2);
-			expect(edit.insert).toHaveBeenNthCalledWith(1, documentEmpty.lineAt(2).rangeIncludingLineBreak.end, `\r\ninterface TestWidgetProperties {\r\n\r\n}\r\n`);
-			expect(edit.insert).toHaveBeenNthCalledWith(2, documentEmpty.lineAt(6).rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				documentEmpty.lineAt(2).rangeIncludingLineBreak.end,
+				`\r\ninterface TestWidgetProperties {\r\n\r\n}\r\n`
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				2,
+				documentEmpty.lineAt(6).rangeIncludingLineBreak.end,
+				'\tconst {  } = properties();\r\n'
+			);
 			expect(edit.insert).toHaveBeenCalledTimes(2);
 		});
 
@@ -150,11 +166,27 @@ describe('widget factory', () => {
 
 			addProperties(editor, edit);
 
-			expect(edit.replace).toHaveBeenNthCalledWith(1, documentSingleLine.lineAt(5).range, 'const factory = create({ theme }).properties<TestWidgetProperties>();');
-			expect(edit.replace).toHaveBeenNthCalledWith(2, documentSingleLine.lineAt(7).range, 'export default factory(function TestWidget({ middleware: { theme }, properties }) {');
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentSingleLine.lineAt(5).range,
+				'const factory = create({ theme }).properties<TestWidgetProperties>();'
+			);
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				2,
+				documentSingleLine.lineAt(7).range,
+				'export default factory(function TestWidget({ middleware: { theme }, properties }) {'
+			);
 			expect(edit.replace).toHaveBeenCalledTimes(2);
-			expect(edit.insert).toHaveBeenNthCalledWith(1, documentSingleLine.lineAt(3).rangeIncludingLineBreak.end, `\r\ninterface TestWidgetProperties {\r\n\r\n}\r\n`);
-			expect(edit.insert).toHaveBeenNthCalledWith(2, documentSingleLine.lineAt(7).rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				documentSingleLine.lineAt(3).rangeIncludingLineBreak.end,
+				`\r\ninterface TestWidgetProperties {\r\n\r\n}\r\n`
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				2,
+				documentSingleLine.lineAt(7).rangeIncludingLineBreak.end,
+				'\tconst {  } = properties();\r\n'
+			);
 			expect(edit.insert).toHaveBeenCalledTimes(2);
 		});
 
@@ -163,13 +195,33 @@ describe('widget factory', () => {
 
 			addProperties(editor, edit);
 
-			expect(edit.replace).toHaveBeenNthCalledWith(1, documentMultiLine.lineAt(5).range, 'const factory = create({ theme }).properties<TestWidgetProperties>();');
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentMultiLine.lineAt(5).range,
+				'const factory = create({ theme }).properties<TestWidgetProperties>();'
+			);
 			expect(edit.replace).toHaveBeenCalledTimes(1);
 
-			expect(edit.insert).toHaveBeenNthCalledWith(1, documentMultiLine.lineAt(3).rangeIncludingLineBreak.end, `\r\ninterface TestWidgetProperties {\r\n\r\n}\r\n`);
-			expect(edit.insert).toHaveBeenNthCalledWith(2, documentMultiLine.lineAt(10).range.end, ',');
-			expect(edit.insert).toHaveBeenNthCalledWith(3, documentMultiLine.lineAt(11).rangeIncludingLineBreak.start, `\tproperties\r\n`);
-			expect(edit.insert).toHaveBeenNthCalledWith(4, documentMultiLine.lineAt(11).rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				documentMultiLine.lineAt(3).rangeIncludingLineBreak.end,
+				`\r\ninterface TestWidgetProperties {\r\n\r\n}\r\n`
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				2,
+				documentMultiLine.lineAt(10).range.end,
+				','
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				3,
+				documentMultiLine.lineAt(11).rangeIncludingLineBreak.start,
+				`\tproperties\r\n`
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				4,
+				documentMultiLine.lineAt(11).rangeIncludingLineBreak.end,
+				'\tconst {  } = properties();\r\n'
+			);
 			expect(edit.insert).toHaveBeenCalledTimes(4);
 		});
 
@@ -178,13 +230,33 @@ describe('widget factory', () => {
 
 			addProperties(editor, edit);
 
-			expect(edit.replace).toHaveBeenNthCalledWith(1, documentMultiLineCreateMultiLine.lineAt(7).range, '}).properties<TestWidgetProperties>();');
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentMultiLineCreateMultiLine.lineAt(7).range,
+				'}).properties<TestWidgetProperties>();'
+			);
 			expect(edit.replace).toHaveBeenCalledTimes(1);
 
-			expect(edit.insert).toHaveBeenNthCalledWith(1, documentMultiLineCreateMultiLine.lineAt(3).rangeIncludingLineBreak.end, `\r\ninterface TestWidgetProperties {\r\n\r\n}\r\n`);
-			expect(edit.insert).toHaveBeenNthCalledWith(2, documentMultiLineCreateMultiLine.lineAt(12).range.end, ',');
-			expect(edit.insert).toHaveBeenNthCalledWith(3, documentMultiLineCreateMultiLine.lineAt(13).rangeIncludingLineBreak.start, `\tproperties\r\n`);
-			expect(edit.insert).toHaveBeenNthCalledWith(4, documentMultiLineCreateMultiLine.lineAt(13).rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				documentMultiLineCreateMultiLine.lineAt(3).rangeIncludingLineBreak.end,
+				`\r\ninterface TestWidgetProperties {\r\n\r\n}\r\n`
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				2,
+				documentMultiLineCreateMultiLine.lineAt(12).range.end,
+				','
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				3,
+				documentMultiLineCreateMultiLine.lineAt(13).rangeIncludingLineBreak.start,
+				`\tproperties\r\n`
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				4,
+				documentMultiLineCreateMultiLine.lineAt(13).rangeIncludingLineBreak.end,
+				'\tconst {  } = properties();\r\n'
+			);
 			expect(edit.insert).toHaveBeenCalledTimes(4);
 		});
 
@@ -192,7 +264,7 @@ describe('widget factory', () => {
 			(editor as any).document = badDocument;
 
 			addProperties(editor, edit);
-			
+
 			expect(edit.replace).toHaveBeenCalledTimes(0);
 			expect(edit.insert).toHaveBeenCalledTimes(0);
 		});
@@ -213,7 +285,11 @@ describe('widget factory', () => {
 
 			addChildren(editor, edit);
 
-			expect(edit.replace).toHaveBeenNthCalledWith(1, documentEmpty.lineAt(6).range, 'export default factory(function TestWidget({ children }) {');
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentEmpty.lineAt(6).range,
+				'export default factory(function TestWidget({ children }) {'
+			);
 			expect(edit.replace).toHaveBeenCalledTimes(1);
 			expect(edit.insert).toHaveBeenNthCalledWith(1, editor.selection.anchor, 'children()');
 			expect(edit.insert).toHaveBeenCalledTimes(1);
@@ -223,7 +299,11 @@ describe('widget factory', () => {
 			(editor as any).document = documentSingleLine;
 
 			addChildren(editor, edit);
-			expect(edit.replace).toHaveBeenNthCalledWith(1, documentSingleLine.lineAt(7).range, 'export default factory(function TestWidget({ middleware: { theme }, children }) {');
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentSingleLine.lineAt(7).range,
+				'export default factory(function TestWidget({ middleware: { theme }, children }) {'
+			);
 			expect(edit.replace).toHaveBeenCalledTimes(1);
 			expect(edit.insert).toHaveBeenNthCalledWith(1, editor.selection.anchor, 'children()');
 			expect(edit.insert).toHaveBeenCalledTimes(1);
@@ -234,8 +314,16 @@ describe('widget factory', () => {
 
 			addChildren(editor, edit);
 
-			expect(edit.insert).toHaveBeenNthCalledWith(1, documentMultiLine.lineAt(10).range.end, ',');
-			expect(edit.insert).toHaveBeenNthCalledWith(2, documentMultiLine.lineAt(11).rangeIncludingLineBreak.start, `\tchildren\r\n`);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				documentMultiLine.lineAt(10).range.end,
+				','
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				2,
+				documentMultiLine.lineAt(11).rangeIncludingLineBreak.start,
+				`\tchildren\r\n`
+			);
 			expect(edit.insert).toHaveBeenNthCalledWith(3, editor.selection.anchor, 'children()');
 			expect(edit.insert).toHaveBeenCalledTimes(3);
 		});

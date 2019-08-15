@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { parse } from "path";
+import { parse } from 'path';
 
-import { regexFactory } from "./regex";
-import { findLine, getTab } from "./util";
+import { regexFactory } from './regex';
+import { findLine, getTab } from './util';
 import { Callback } from './interface';
 
 function addToWidgetFactory(
@@ -19,20 +19,27 @@ function addToWidgetFactory(
 		if (regex.widgetFactoryEnd.test(widgetFactoryLine.text)) {
 			let newWidgetFactoryLine = widgetFactoryLine.text;
 			if (/([ ]*}[ ]*\))/g.test(newWidgetFactoryLine)) {
-				newWidgetFactoryLine = widgetFactoryLine.text.replace(/([ ]*}[ ]*\))/g, `, ${property} })`);
-			}
-			else {
-				newWidgetFactoryLine = widgetFactoryLine.text.replace(/(\([ ]*\))/g, `({ ${property} })`);
+				newWidgetFactoryLine = widgetFactoryLine.text.replace(
+					/([ ]*}[ ]*\))/g,
+					`, ${property} })`
+				);
+			} else {
+				newWidgetFactoryLine = widgetFactoryLine.text.replace(
+					/(\([ ]*\))/g,
+					`({ ${property} })`
+				);
 			}
 			editBuilder.replace(widgetFactoryLine.range, newWidgetFactoryLine);
 			callback(widgetFactoryLine);
-		}
-		else {
+		} else {
 			const widgetFactoryEndLine = findLine(document, regex.widgetFactoryEnd);
 			if (widgetFactoryEndLine) {
 				const lineBefore = document.lineAt(widgetFactoryEndLine.lineNumber - 1);
 				editBuilder.insert(lineBefore.range.end, ',');
-				editBuilder.insert(widgetFactoryEndLine.rangeIncludingLineBreak.start, `${tab}${property}\r\n`);
+				editBuilder.insert(
+					widgetFactoryEndLine.rangeIncludingLineBreak.start,
+					`${tab}${property}\r\n`
+				);
 				callback(widgetFactoryEndLine);
 			}
 		}
@@ -56,24 +63,34 @@ export const addProperties: Callback = (editor, edit) => {
 		let line: vscode.TextLine | undefined;
 		if (regex.createLineEnd.test(createLine.text)) {
 			line = createLine;
-		}
-		else {
-			const createEndLine = findLine(document, regex.createLineEnd, { startAt: createLine.lineNumber, endTest: /export/g });
+		} else {
+			const createEndLine = findLine(document, regex.createLineEnd, {
+				startAt: createLine.lineNumber,
+				endTest: /export/g
+			});
 			if (createEndLine && !/export/g.test(createEndLine.text)) {
 				line = createEndLine;
 			}
 		}
 		if (line) {
-			const newCreateLine = line.text.replace(');', `).properties<${file.name}Properties>();`);
+			const newCreateLine = line.text.replace(
+				');',
+				`).properties<${file.name}Properties>();`
+			);
 			edit.replace(line.range, newCreateLine);
 		}
 	}
 
 	addToWidgetFactory(document, edit, editor.options, 'properties', (widgetFactoryEndLine) => {
-		edit.insert(widgetFactoryEndLine.rangeIncludingLineBreak.end, '\tconst {  } = properties();\r\n');
+		edit.insert(
+			widgetFactoryEndLine.rangeIncludingLineBreak.end,
+			'\tconst {  } = properties();\r\n'
+		);
 	});
-}
+};
 
 export const addChildren: Callback = (editor, edit) => {
-	addToWidgetFactory(editor.document, edit, editor.options, 'children', () => edit.insert(editor.selection.anchor, 'children()'));
-}
+	addToWidgetFactory(editor.document, edit, editor.options, 'children', () =>
+		edit.insert(editor.selection.anchor, 'children()')
+	);
+};

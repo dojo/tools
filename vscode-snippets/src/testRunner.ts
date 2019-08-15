@@ -7,7 +7,9 @@ import { findLine } from './util';
 export function runTests(all = false) {
 	const editor = vscode.window.activeTextEditor;
 	if (editor) {
-		const packageJson = JSON.parse(readFileSync(join(vscode.workspace.rootPath || '', 'package.json'), 'utf8'));
+		const packageJson = JSON.parse(
+			readFileSync(join(vscode.workspace.rootPath || '', 'package.json'), 'utf8')
+		);
 		let runner = 'intern';
 		let useNpmTest = false;
 		if (packageJson.scripts && packageJson.scripts.hasOwnProperty('test')) {
@@ -15,16 +17,17 @@ export function runTests(all = false) {
 			if (packageJson.scripts.test.includes('jest')) {
 				runner = 'jest';
 			}
-		}
-		else if (packageJson.devDependencies && packageJson.devDependencies.hasOwnProperty('jest')) {
+		} else if (
+			packageJson.devDependencies &&
+			packageJson.devDependencies.hasOwnProperty('jest')
+		) {
 			runner = 'jest';
 		}
 
 		let terminal: vscode.Terminal | undefined;
 		if (vscode.window.activeTerminal) {
 			terminal = vscode.window.activeTerminal;
-		}
-		else {
+		} else {
 			terminal = vscode.window.createTerminal();
 		}
 		terminal.show();
@@ -53,7 +56,7 @@ export function runTests(all = false) {
 		}
 
 		if (runner === 'intern') {
-			fileName = `dist/dev/${fileName}`.replace(/\.tsx?/g, '.js')
+			fileName = `dist/dev/${fileName}`.replace(/\.tsx?/g, '.js');
 			let commandPrefix = 'npx intern';
 			if (useNpmTest) {
 				commandPrefix = 'npm test --';
@@ -63,8 +66,7 @@ export function runTests(all = false) {
 			} else {
 				terminal.sendText(`${commandPrefix} suites=${fileName}`);
 			}
-		}
-		else {
+		} else {
 			let commandPrefix = 'npx jest';
 			if (useNpmTest) {
 				commandPrefix = 'npm test --';

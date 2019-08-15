@@ -1,6 +1,9 @@
 import * as vscode from 'vscode';
 
-export function createDocument(lines: string[], details: Partial<vscode.TextDocument> = {}): vscode.TextDocument {
+export function createDocument(
+	lines: string[],
+	details: Partial<vscode.TextDocument> = {}
+): vscode.TextDocument {
 	return {
 		...details,
 		fileName: '/path/to/TestWidget.tsx',
@@ -33,7 +36,7 @@ export function createDocument(lines: string[], details: Partial<vscode.TextDocu
 					} as vscode.Position,
 					isEmpty: Boolean(line.trim().length),
 					isSingleLine: true
-				} as vscode.Range, 
+				} as vscode.Range,
 				firstNonWhitespaceCharacterIndex: line.length - line.trimLeft().length,
 				isEmptyOrWhitespace: Boolean(line.trim().length)
 			} as vscode.TextLine;

@@ -12,7 +12,9 @@ export function addMiddleware(middleware: string): Callback {
 		const regex = regexFactory();
 		let importName = middleware;
 		if (middleware === 'store') {
-			importName = `create${importName.charAt(0).toUpperCase()}${importName.slice(1)}Middleware`;
+			importName = `create${importName.charAt(0).toUpperCase()}${importName.slice(
+				1
+			)}Middleware`;
 		}
 
 		const importStatement = `import ${importName} from \'@dojo/framework/core/middleware/${middleware}\';\r\n`;
@@ -34,9 +36,11 @@ export function addMiddleware(middleware: string): Callback {
 			} else if (regex.createAloneLine.test(newCreateLine)) {
 				shouldEdit = false;
 				const tabCount = (newCreateLine.match(new RegExp(tab, 'g')) || []).length + 1;
-				edit.insert(createLine.rangeIncludingLineBreak.end, `${tab.repeat(tabCount)}${middleware},\r\n`);
-			}
-			else {
+				edit.insert(
+					createLine.rangeIncludingLineBreak.end,
+					`${tab.repeat(tabCount)}${middleware},\r\n`
+				);
+			} else {
 				newCreateLine = newCreateLine.replace('create()', `create({ ${middleware} })`);
 			}
 			if (shouldEdit && newCreateLine !== createLine.text) {
@@ -57,9 +61,12 @@ export function addMiddleware(middleware: string): Callback {
 			const lastImportStatement = findLine(document, regex.importLine, { reverse: true });
 			if (lastImportStatement) {
 				const file = parse(document.fileName);
-				switch(middleware) {
+				switch (middleware) {
 					case 'theme':
-						edit.insert(lastImportStatement.rangeIncludingLineBreak.end, `import * as css from './${file.name}.m.css';\r\n`);
+						edit.insert(
+							lastImportStatement.rangeIncludingLineBreak.end,
+							`import * as css from './${file.name}.m.css';\r\n`
+						);
 						const cssFile = join(file.dir, `${file.name}.m.css`);
 						if (!existsSync(cssFile)) {
 							writeFileSync(cssFile, `.root {\r\n\r\n}\r\n`);
@@ -70,10 +77,16 @@ export function addMiddleware(middleware: string): Callback {
 						}
 						break;
 					case 'i18n':
-						edit.insert(lastImportStatement.rangeIncludingLineBreak.end, `import bundle from './${file.name}.nls';\r\n`);
+						edit.insert(
+							lastImportStatement.rangeIncludingLineBreak.end,
+							`import bundle from './${file.name}.nls';\r\n`
+						);
 						const bundleFile = join(file.dir, `${file.name}.nls.ts`);
 						if (!existsSync(bundleFile)) {
-							writeFileSync(bundleFile, `const messages = {\r\n\r\n};\r\n\r\nexport default { messages };\r\n`);
+							writeFileSync(
+								bundleFile,
+								`const messages = {\r\n\r\n};\r\n\r\nexport default { messages };\r\n`
+							);
 						}
 						break;
 				}
@@ -99,19 +112,29 @@ export function addMiddleware(middleware: string): Callback {
 				if (match.length > 1 && match[1]) {
 					let middlewares = match[1];
 					const newMiddleware = middlewares.replace(/[ ]*\}/g, `, ${middleware} }`);
-					newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace(middlewares, newMiddleware);
-				}
-				else {
+					newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace(
+						middlewares,
+						newMiddleware
+					);
+				} else {
 					wasEdited = false;
-					const tabCount = (newFactoryMiddlewareLine.match(new RegExp(tab, 'g')) || []).length + 1;
-					edit.insert(widgetFactoryMiddlewareLine.rangeIncludingLineBreak.end, `${tab.repeat(tabCount)}${middleware},\r\n`);
+					const tabCount =
+						(newFactoryMiddlewareLine.match(new RegExp(tab, 'g')) || []).length + 1;
+					edit.insert(
+						widgetFactoryMiddlewareLine.rangeIncludingLineBreak.end,
+						`${tab.repeat(tabCount)}${middleware},\r\n`
+					);
 				}
-			}
-			else if (/[ ]*}[ ]*\)/g.test(newFactoryMiddlewareLine)) {
-				newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace(/[ ]*}[ ]*\)/g, `, middleware: { ${middleware} } })`);
-			}
-			else {
-				newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace('()', `({ middleware: { ${middleware} } })`);
+			} else if (/[ ]*}[ ]*\)/g.test(newFactoryMiddlewareLine)) {
+				newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace(
+					/[ ]*}[ ]*\)/g,
+					`, middleware: { ${middleware} } })`
+				);
+			} else {
+				newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace(
+					'()',
+					`({ middleware: { ${middleware} } })`
+				);
 			}
 			if (wasEdited && newFactoryMiddlewareLine !== widgetFactoryMiddlewareLine.text) {
 				edit.replace(widgetFactoryMiddlewareLine.range, newFactoryMiddlewareLine);
