@@ -12,7 +12,7 @@ Type part of a snippet, press `enter`, and the snippet unfolds.
 
 Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to activate snippets from within the editor.
 
-### Command Palette Commands
+### Commands (Command Palette)
 
 | Command                              | Purpose                                                           | Shortcut                 |
 | -------------------------------------| ----------------------------------------------------------------- | ------------------------ |
@@ -34,14 +34,20 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 
 ### Snippets
 
+#### Widget Snippets
+
 | Snippet                           | Purpose                                                      |
 | --------------------------------- | ------------------------------------------------------------ |
 | `d-widget`                        | widget                                                       |
 | `d-widget-theme`                  | widget with theme middleware                                 |
 | `d-widget-i18n`                   | widget with i18n middleware                                  |
 | `d-widget-properties`             | widget with properties                                       |
-| `d-middleware`                    | middleware                                                   |
-| `d-i18n-bundle`                   | i18n bundle                                                  |
+| `d-widget-classes`                | adds widget classes property                                 |
+
+#### Routing Snippets
+
+| Snippet                           | Purpose                                                      |
+| --------------------------------- | ------------------------------------------------------------ |
 | `d-outlet`                        | outlet                                                       |
 | `d-outlet-params`                 | outlet with parameters                                       |
 | `d-outlet-exact`                  | outlet that renders only when route is exact                 |
@@ -51,18 +57,49 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 | `d-route-default-params`          | route with default parameter values                          |
 | `d-route-children`                | route with children                                          |
 | `d-route-children-default-params` | route with default parameter values and children             |
+
+#### Middleware Snippets
+
+| Snippet                           | Purpose                                                      |
+| --------------------------------- | ------------------------------------------------------------ |
+| `d-middleware`                    | middleware                                                   |
+| `d-store-get`                     | store middleware get operation                               |
+| `d-store-apply`                   | store middleware apply operation                             |
+| `d-icache-get`                    | icache middleware get                                        |
+| `d-icache-getorset`               | icache middleware getOrSet                                   |
+| `d-icache-getorset-typeed`        | icache middleware getOrSet with typed return                 |
+| `d-icache-set`                    | icache middleware set                                        |
+| `d-cache-get`                     | cache middleware get                                         |
+| `d-cache-set`                     | cache middleware set                                         |
+| `d-localize`                      | localize nls bundle                                          |
+| `d-i18n-bundle`                   | i18n bundle                                                  |
+| `d-theme-classes`                 | theme css module                                             |
+| `d-block`                         | block function (used by block middleware)                    |
+| `d-block-options`                 | block function with options (used by block middleware)       |
+| `d-block-run`                     | block middleware run                                         |
+| `d-breakpoint-get`                | breakpoint middleware get                                    |
+| `d-breakpoint-get-custom`         | breakpoint middleware get with custom breakpoints            |
+| `d-dimensions-get`                | breakpoint dimensions get                                    |
+| `d-focus-isFocused`               | focus middleware isFocused                                   |
+| `d-intersection-get`              | intersection middleware get                                  |
+| `d-resize-get`                    | resize middleware get                                        |
+
+#### Command/Process Snippets
+
+| Snippet                           | Purpose                                                      |
+| --------------------------------- | ------------------------------------------------------------ |
 | `d-command-factory`               | initialize processes file with command factory and imports   |
 | `d-process`                       | process                                                      |
 | `d-process-in-progress`           | process with in progress flag in state                       |
+
+#### Testing Snippets
+
+| Snippet                           | Purpose                                                      |
+| --------------------------------- | ------------------------------------------------------------ |
 | `d-test-widget-intern-bdd`        | initialize Intern BDD test file for Dojo widget              |
 | `d-test-widget-intern-object`     | initialize Intern Object test file for Dojo widget           |
 | `d-test-widget-jest`              | initialize Jest spec file for Dojo widget                    |
 | `d-test-process-jest`             | initialize Jest spec file for Dojo process                   |
-| `d-block`                         | block function (used by block middleware)                    |
-| `d-block-options`                 | block function with options (used by block middleware)       |
-| `d-store-get`                     | store middleware get operation                               |
-| `d-store-apply`                   | store middleware apply operation                             |
-| `d-widget-classes`                | adds widget classes property                                 |
 
 ## Developing
 

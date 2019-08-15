@@ -4,6 +4,28 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [6.0.8]
+
+- **New Feature** - Add the following new middleware snippets:
+  
+  | Snippet                           | Purpose                                                      |
+  | --------------------------------- | ------------------------------------------------------------ |
+  | `d-icache-get`                    | icache middleware get                                        |
+  | `d-icache-getorset`               | icache middleware getOrSet                                   |
+  | `d-icache-getorset-typeed`        | icache middleware getOrSet with typed return                 |
+  | `d-icache-set`                    | icache middleware set                                        |
+  | `d-cache-get`                     | cache middleware get                                         |
+  | `d-cache-set`                     | cache middleware set                                         |
+  | `d-localize`                      | localize nls bundle                                          |
+  | `d-theme-classes`                 | theme css module                                             |
+  | `d-block-run`                     | block middleware run                                         |
+  | `d-breakpoint-get`                | breakpoint middleware get                                    |
+  | `d-breakpoint-get-custom`         | breakpoint middleware get with custom breakpoints            |
+  | `d-dimensions-get`                | breakpoint dimensions get                                    |
+  | `d-focus-isFocused`               | focus middleware isFocused                                   |
+  | `d-intersection-get`              | intersection middleware get                                  |
+  | `d-resize-get`                    | resize middleware get                                        |
+
 ## [6.0.7]
 
 - **Enhancement** - Add `defaultRoute: true` to initial entry in `d-routes` snippet.

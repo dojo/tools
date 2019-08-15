@@ -213,6 +213,13 @@
       ""
     ]
   },
+  "Dojo Block Run": {
+    "prefix": "d-block-run",
+    "description": "Dojo block middleware run",
+    "body": [
+      "const ${1:result} = block(${2:blockFunction})(${3:argument});$0"
+    ]
+  },
   "Dojo Store Get": {
     "prefix": "d-store-get",
     "description": "Dojo store get operation",
@@ -226,6 +233,107 @@
     "body": [
       "store.apply([replace(store.path(${1:'path', 'to', 'value'}), ${2:newValue})]);$0"
     ]
+  },
+  "Dojo Icache Get": {
+    "prefix": "d-icache-get",
+    "description": "Dojo icache middleware get",
+    "body": [
+      "const ${1:variableName} = icache.get<${2:string}>('${3:key}', ${4:'value'});$0"
+    ]
+  },
+  "Dojo Icache GetOrSet": {
+    "prefix": "d-icache-getorset",
+    "description": "Dojo icache middleware getOrSet",
+    "body": [
+      "const ${1:variableName} = icache.getOrSet('${2:key}', ${3:'defaultValue'});$0"
+    ]
+  },
+  "Dojo Icache GetOrSet Typed": {
+    "prefix": "d-icache-getorset-typeed",
+    "description": "Dojo icache middleware getOrSet typed",
+    "body": [
+      "const ${1:variableName} = icache.getOrSet<${2:string}>('${3:key}', ${4:'defaultValue'});$0"
+    ]
+  },
+  "Dojo Icache Set": {
+    "prefix": "d-icache-set",
+    "description": "Dojo icache middleware set",
+    "body": [
+      "icache.set('${1:key}', ${2:'value'});$0"
+    ]
+  },
+  "Dojo Cache Get": {
+    "prefix": "d-cache-get",
+    "description": "Dojo cache middleware get",
+    "body": [
+      "const ${1:variableName} = cache.get<${2:string}>('${3:key}', ${4:'value'});$0"
+    ]
+  },
+  "Dojo Cache Set": {
+    "prefix": "d-cache-set",
+    "description": "Dojo cache middleware set",
+    "body": [
+      "cache.set('${1:key}', ${2:'value'});$0"
+    ]
+  },
+  "Dojo Localize": {
+    "prefix": "d-localize",
+    "description": "Localize nls bundle",
+    "body": [
+      "const { messages$0 } = i18n.localize(${1:bundle});"
+    ]
+  },
+  "Dojo Theme Classes": {
+    "prefix": "d-theme-classes",
+    "description": "Theme css module",
+    "body": [
+      "const ${1:themedCss} = theme.classes(${2:css});$0"
+    ]
+  },
+  "Dojo Breakpoint Get": {
+    "prefix": "d-breakpoint-get",
+    "description": "Breakpoint middleware get",
+    "body": [
+      "const { breakpoint: breakpointName = ${2:undefined} } = breakpoint.get('${1:key}') || {};"
+    ]
+  },
+  "Dojo Breakpoint Get with Custom Breakpoints": {
+    "prefix": "d-breakpoint-get-custom",
+    "description": "Breakpoint middleware get",
+    "body": [
+      "const { breakpoint: breakpointName = ${3:undefined} } = breakpoint.get('${1:key}', ${2:{",
+      "\tPHONE: 0,",
+      "\tTABLET: 500,",
+      "\tDESKTOP: 800",
+      "\\}}) || {};"
+    ]
+  },
+  "Dojo Dimensions Get": {
+    "prefix": "d-dimensions-get",
+    "description": "Dojo dimensions middleware get",
+    "body": [
+      "const { ${2:position, size} } = dimensions.get('${1:key}');$0"
+    ]
+  },
+  "Dojo Focus isFocused": {
+    "prefix": "d-focus-isFocused",
+    "description": "Dojo focus middleware isFocused",
+    "body": [
+      "const isFocused = focus.isFocused('${1:key}');$0"
+    ]
+  },
+  "Dojo Intersection Get": {
+    "prefix": "d-intersection-get",
+    "description": "Dojo intersection middleware get",
+    "body": [
+      "const { isIntersecting } = intersection.get('${1:key}');$0"
+    ]
+  },
+  "Dojo Resize Get": {
+    "prefix": "d-resize-get",
+    "description": "Dojo resize middleware get",
+    "body": [
+      "const { ${2:width = 0, height = 0} } = resize.get('${1:key}') || {};$0"
+    ]
   }
 }
-
