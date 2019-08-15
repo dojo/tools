@@ -32,7 +32,7 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 | Dojo: Run test                       | Runs the selected test, test suite or test file in intern or jest | `Ctrl + Shift + T`       |
 | Dojo: Run all tests                  | Runs the selected file's tests in intern or jest                  | `Ctrl + Shift + Alt + T` |
 
-### Commands
+### Snippets
 
 | Snippet                           | Purpose                                                      |
 | --------------------------------- | ------------------------------------------------------------ |
@@ -69,8 +69,9 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 ## What's in here
 
 * `package.json` - this is the manifest file that defines the location of the snippet files, specifies the language of the snippets, and what commands are available.
-* `snippets/typescript.json` - the file containing all snippets available in `.ts` files.
+* `snippets/typescript.json` - the file containing all snippets available only in `.ts` files.
 * `snippets/typescriptreact.json` - the file containing all snippets available only in `.tsx` files.
+* `snippets/common.json` - the file containing all snippets available in both `.ts` and `.tsx` files.
 * `src/extension.ts` - the entry point for all commands.
 
 ### Get up and running straight away
