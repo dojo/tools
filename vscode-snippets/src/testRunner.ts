@@ -56,7 +56,7 @@ export function runTests(all = false) {
 			fileName = `dist/dev/${fileName}`.replace(/\.tsx?/g, '.js')
 			let commandPrefix = 'npx intern';
 			if (useNpmTest) {
-				commandPrefix = 'npm run test --';
+				commandPrefix = 'npm test --';
 			}
 			if (test) {
 				terminal.sendText(`${commandPrefix} suites=${fileName} grep='${test}'`);
@@ -67,7 +67,7 @@ export function runTests(all = false) {
 		else {
 			let commandPrefix = 'npx jest';
 			if (useNpmTest) {
-				commandPrefix = 'npm run test --';
+				commandPrefix = 'npm test --';
 			}
 			if (test) {
 				terminal.sendText(`${commandPrefix} ${fileName} -t '${test}'`);

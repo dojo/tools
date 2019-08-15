@@ -14,22 +14,23 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 
 ### Command Palette Commands
 
-| Command                              | Purpose                                                           | Shortcut           |
-| -------------------------------------| ----------------------------------------------------------------- | ------------------ |
-| Dojo: Add i18n middleware            | Imports and configures i18n middleware for use                    |                    |
-| Dojo: Add theme middleware           | Imports and configures theme middleware for use                   |                    |
-| Dojo: Add block middleware           | Imports and configures block middleware for use                   |                    |
-| Dojo: Add breakpoint middleware      | Imports and configures breakpoint middleware for use              |                    |
-| Dojo: Add cache middleware           | Imports and configures cache middleware for use                   |                    |
-| Dojo: Add icache middleware          | Imports and configures icache middleware for use                  |                    |
-| Dojo: Add focus middleware           | Imports and configures focus middleware for use                   |                    |
-| Dojo: Add intersection middleware    | Imports and configures intersection middleware for use            |                    |
-| Dojo: Add resize middleware          | Imports and configures resize middleware for use                  |                    |
-| Dojo: Add store middleware           | Imports and configures store middleware for use                   |                    |
-| Dojo: Add dimensions middleware      | Imports and configures dimensions middleware for use              |                    |
-| Dojo: Add properties to widget       | Creates properties interface and configures in widget             |                    |
-| Dojo: Add children to widget         | Configures children in widget and inserts at cursor               |                    |
-| Dojo: Run test                       | Runs the selected test, test suite or test file in intern or jest | `Ctrl + Shift + T` |
+| Command                              | Purpose                                                           | Shortcut                 |
+| -------------------------------------| ----------------------------------------------------------------- | ------------------------ |
+| Dojo: Add i18n middleware            | Imports and configures i18n middleware for use                    |                          |
+| Dojo: Add theme middleware           | Imports and configures theme middleware for use                   |                          |
+| Dojo: Add block middleware           | Imports and configures block middleware for use                   |                          |
+| Dojo: Add breakpoint middleware      | Imports and configures breakpoint middleware for use              |                          |
+| Dojo: Add cache middleware           | Imports and configures cache middleware for use                   |                          |
+| Dojo: Add icache middleware          | Imports and configures icache middleware for use                  |                          |
+| Dojo: Add focus middleware           | Imports and configures focus middleware for use                   |                          |
+| Dojo: Add intersection middleware    | Imports and configures intersection middleware for use            |                          |
+| Dojo: Add resize middleware          | Imports and configures resize middleware for use                  |                          |
+| Dojo: Add store middleware           | Imports and configures store middleware for use                   |                          |
+| Dojo: Add dimensions middleware      | Imports and configures dimensions middleware for use              |                          |
+| Dojo: Add properties to widget       | Creates properties interface and configures in widget             |                          |
+| Dojo: Add children to widget         | Configures children in widget and inserts at cursor               |                          |
+| Dojo: Run test                       | Runs the selected test, test suite or test file in intern or jest | `Ctrl + Shift + T`       |
+| Dojo: Run all tests                  | Runs the selected file's tests in intern or jest                  | `Ctrl + Shift + Alt + T` |
 
 ### Commands
 

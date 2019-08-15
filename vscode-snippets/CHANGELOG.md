@@ -4,6 +4,17 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [6.0.6]
+
+- **Enhancement** - Test runner command now prioritizes using `npm test` over direct commands, and prioritizes using the `test` script for test runner (intern or jest) detection.
+- **New Feature** - Add `run all tests` command, which runs all the tests in a file by default, adding `--coverage` to jest runs. Includes new menu item and shortcut (Ctrl+Shift+Alt+T on windows or Cmd+Shift+Alt+T on mac)
+  
+  
+
+  | Command                              | Purpose                                                           | Shortcut                 |
+  | -------------------------------------| ----------------------------------------------------------------- | ------------------------ |
+  | Dojo: Run all tests                  | Runs the selected file's tests in intern or jest                  | `Ctrl + Shift + Alt + T` |
+
 ## [6.0.5]
 
 - **Bugfix** - Remove fs-extra as dependency
