@@ -34,27 +34,35 @@ Alternatively, press `Ctrl`+`Space` (Windows, Linux) or `Cmd`+`Space` (OSX) to a
 
 ### Commands
 
-| Snippet                      | Purpose                                                      |
-| ---------------------------- | ------------------------------------------------------------ |
-| `d-widget`                   | widget                                                       |
-| `d-widget-theme`             | widget with theme middleware                                 |
-| `d-widget-i18n`              | widget with i18n middleware                                  |
-| `d-widget-properties`        | widget with properties                                       |
-| `d-middleware`               | middleware                                                   |
-| `d-i18n-bundle`              | i18n bundle                                                  |
-| `d-outlet`                   | outlet                                                       |
-| `d-outlet-params`            | outlet with parameters                                       |
-| `d-outlet-exact`             | outlet that renders only when route is exact                 |
-| `d-routes`                   | routes file setup with root route                            |
-| `d-route`                    | route                                                        |
-| `d-route-children`           | route with children                                          |
-| `d-command-factory`          | initialize processes file with command factory and imports   |
-| `d-process`                  | process                                                      |
-| `d-process-in-progress`      | process with in progress flag in state                       |
-| `d-test-widget-intern-bdd`   | initialize Intern BDD test file for Dojo widget              |
-| `d-test-widget-intern-object`| initialize Intern Object test file for Dojo widget           |
-| `d-test-widget-jest`         | initialize Jest spec file for Dojo widget                    |
-| `d-test-process-jest`        | initialize Jest spec file for Dojo process                   |
+| Snippet                           | Purpose                                                      |
+| --------------------------------- | ------------------------------------------------------------ |
+| `d-widget`                        | widget                                                       |
+| `d-widget-theme`                  | widget with theme middleware                                 |
+| `d-widget-i18n`                   | widget with i18n middleware                                  |
+| `d-widget-properties`             | widget with properties                                       |
+| `d-middleware`                    | middleware                                                   |
+| `d-i18n-bundle`                   | i18n bundle                                                  |
+| `d-outlet`                        | outlet                                                       |
+| `d-outlet-params`                 | outlet with parameters                                       |
+| `d-outlet-exact`                  | outlet that renders only when route is exact                 |
+| `d-routes`                        | routes file setup with root route                            |
+| `d-route`                         | route                                                        |
+| `d-route-default`                 | route with `defaultRoute: true`                              |
+| `d-route-default-params`          | route with default parameter values                          |
+| `d-route-children`                | route with children                                          |
+| `d-route-children-default-params` | route with default parameter values and children             |
+| `d-command-factory`               | initialize processes file with command factory and imports   |
+| `d-process`                       | process                                                      |
+| `d-process-in-progress`           | process with in progress flag in state                       |
+| `d-test-widget-intern-bdd`        | initialize Intern BDD test file for Dojo widget              |
+| `d-test-widget-intern-object`     | initialize Intern Object test file for Dojo widget           |
+| `d-test-widget-jest`              | initialize Jest spec file for Dojo widget                    |
+| `d-test-process-jest`             | initialize Jest spec file for Dojo process                   |
+| `d-block`                         | block function (used by block middleware)                    |
+| `d-block-options`                 | block function with options (used by block middleware)       |
+| `d-store-get`                     | store middleware get operation                               |
+| `d-store-apply`                   | store middleware apply operation                             |
+| `d-widget-classes`                | adds widget classes property                                 |
 
 ## Developing
 

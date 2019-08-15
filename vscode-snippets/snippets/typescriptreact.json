@@ -197,5 +197,16 @@
       "});",
       ""
     ]
+  },
+  "Widget Classes Property": {
+    "prefix": "d-widget-classes",
+    "description": "Adds widget classes property",
+    "body": [
+      "classes={{",
+      "\t'${1:packageName}/${2:widgetName}}': {",
+      "\t\t${3:targetClass}: [${4:classesToApply}]",
+      "\t}",
+      "}}$0"
+    ]
   }
 }

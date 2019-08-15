@@ -1,7 +1,7 @@
 {
 	"name": "vscode-dojo-snippets",
 	"displayName": "Dojo Snippets (Version 6)",
-	"version": "6.0.6",
+	"version": "6.0.7",
 	"description": "Dojo 6+ snippets and supporting commands",
 	"icon": "images/dojo-logo.png",
 	"galleryBanner": {
@@ -53,8 +53,16 @@
 				"path": "./snippets/typescriptreact.json"
 			},
 			{
+				"language": "typescriptreact",
+				"path": "./snippets/common.json"
+			},
+			{
 				"language": "typescript",
 				"path": "./snippets/typescript.json"
+			},
+			{
+				"language": "typescript",
+				"path": "./snippets/common.json"
 			}
 		],
 		"commands": [

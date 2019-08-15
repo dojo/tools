@@ -1,0 +1,231 @@
+{
+  "Dojo Command Factory": {
+    "prefix": "d-command-factory",
+    "description": "Dojo command factory",
+    "body": [
+      "import { createProcess, createCommandFactory } from '@dojo/framework/stores/process';",
+      "",
+      "import { State } from '${1:./somewhere.ts}';",
+      "",
+      "const commandFactory = createCommandFactory<State>();",
+      "",
+      "$0"
+    ]
+  },
+  "Dojo Process": {
+    "prefix": "d-process",
+    "description": "Dojo process",
+    "body": [
+      "const ${1:processName}Command = commandFactory<${2:{ property: string \\}}>(",
+      "\tasync ({ state, payload }) => {",
+      "\t\t$0",
+      "\t}",
+      ");",
+      "",
+      "export const ${1:processName} = createProcess(",
+      "\t'${1:processName}',",
+      "\t[${1:processName}Command]",
+      ");",
+      ""
+    ]
+  },
+  "Dojo Process with In Progress Flag": {
+    "prefix": "d-process-in-progress",
+    "description": "Dojo process with inprogress flag",
+    "body": [
+      "const ${1:processName}StartCommand = commandFactory(({ state }) => {",
+      "\tstate.${2:statePath} = {",
+      "\t\tinProgress: true",
+      "\t};",
+      "});",
+      "",
+      "const ${1:processName}Command = commandFactory<${3:{ property: string \\}}>(",
+      "\tasync ({ state, payload }) => {",
+      "\t\t$0",
+      "\t\tstate.${2:statePath}.inProgress = false;",
+      "\t}",
+      ");",
+      "",
+      "export const ${1:processName} = createProcess(",
+      "\t'${1:processName}',",
+      "\t[${1:processName}Command, ${1:processName}StartCommand]",
+      ");",
+      ""
+    ]
+  },
+  "Dojo Middleware": {
+    "prefix": "d-middleware",
+    "description": "Dojo middleware",
+    "body": [
+      "import { create } from '@dojo/framework/core/vdom';",
+      "",
+      "const factory = create();",
+      "",
+      "export default factory(function $TM_FILENAME_BASE() {",
+      "\treturn {",
+      "\t\t$0",
+      "\t};",
+      "});",
+      ""
+    ]
+  },
+  "Dojo i18n Bundle": {
+    "prefix": "d-i18n-bundle",
+    "description": "Dojo i18n bundle",
+    "body": [
+      "const messages = {",
+      "\t$0",
+      "};",
+      "",
+      "export default { messages };",
+      ""
+    ]
+  },
+  "Dojo Routes": {
+    "prefix": "d-routes",
+    "description": "Dojo routes",
+    "body": [
+      "import { RouteConfig } from '@dojo/framework/routing/interfaces';",
+      "",
+      "export const routes: RouteConfig[] = [",
+      "\t{",
+      "\t\tpath: '/',",
+      "\t\toutlet: '${1:homeOutlet}',",
+      "\t\tdefaultRoute: true",
+      "\t}$0",
+      "];",
+      "",
+      "export default routes;",
+      ""
+    ]
+  },
+  "Dojo Route": {
+    "prefix": "d-route",
+    "description": "Dojo route",
+    "body": [
+      "{",
+      "\tpath: '${1:path}',",
+      "\toutlet: '${2:outlet}'",
+      "}$0"
+    ]
+  },
+  "Dojo Default Route": {
+    "prefix": "d-route-default",
+    "description": "Dojo route",
+    "body": [
+      "{",
+      "\tpath: '${1:path}',",
+      "\toutlet: '${2:outlet}',",
+      "\tdefaultRoute: true",
+      "}$0"
+    ]
+  },
+  "Dojo Route with Default Params": {
+    "prefix": "d-route-default-params",
+    "description": "Dojo route",
+    "body": [
+      "{",
+      "\tpath: '${1:path}',",
+      "\toutlet: '${2:outlet}',",
+      "\tdefaultParams: {",
+      "\t\t${3:param: 'defaultValue'}",
+      "\t}",
+      "}$0"
+    ]
+  },
+  "Dojo Route with Children": {
+    "prefix": "d-route-children",
+    "description": "Dojo route with children",
+    "body": [
+      "{",
+      "\tpath: '${1:path}',",
+      "\toutlet: '${2:outlet}',",
+      "\tchildren: [",
+      "\t\t$0",
+      "\t]",
+      "}"
+    ]
+  },
+  "Dojo Route with Children and Default Params": {
+    "prefix": "d-route-children-default-params",
+    "description": "Dojo route with children",
+    "body": [
+      "{",
+      "\tpath: '${1:path}',",
+      "\toutlet: '${2:outlet}',",
+      "\tdefaultParams: {",
+      "\t\t${3:param: 'defaultValue'}",
+      "\t},",
+      "\tchildren: [",
+      "\t\t$0",
+      "\t]",
+      "}"
+    ]
+  },
+  "Jest Process Test File": {
+    "prefix": "d-test-process-jest",
+    "description": "Jest spec file for Dojo process",
+    "body": [
+      "import Store from '@dojo/framework/stores/Store';",
+      "",
+      "import { State } from '${1:./somewhere.ts}';",
+      "",
+      "import { ${2:processName} } from '${3:./${TM_FILENAME_BASE/\\.spec//g}}';",
+      "",
+      "describe('requests', () => {",
+      "\tlet store: Store<State>;",
+      "",
+      "\tbeforeEach(() => {",
+      "\t\tstore = new Store<State>();",
+      "\t});",
+      "",
+      "\tdescribe('${2:processName}', () => {",
+      "\t\tit('${4:does something}', () => {",
+      "\t\t\t$0",
+      "\t\t});",
+      "\t});",
+      "});",
+      ""
+    ]
+  },
+  "Dojo Block": {
+    "prefix": "d-block",
+    "description": "Dojo route with children",
+    "body": [
+      "export default async function ${TM_FILENAME_BASE}() {",
+      "\t$0",
+      "}",
+      ""
+    ]
+  },
+  "Dojo Block with Options": {
+    "prefix": "d-block-options",
+    "description": "Dojo route with children",
+    "body": [
+      "interface ${TM_FILENAME_BASE}Options {",
+      "\t${1:someOption?: string}",
+      "}",
+      "",
+      "export default async function ${TM_FILENAME_BASE}(options: ${TM_FILENAME_BASE}Options) {",
+      "\tconst { ${2:someOption = 'defaultValue'} } = options;",
+      "\t$0",
+      "}",
+      ""
+    ]
+  },
+  "Dojo Store Get": {
+    "prefix": "d-store-get",
+    "description": "Dojo store get operation",
+    "body": [
+      "const ${1:variableName} = store.get(store.path(${2:'path', 'to', 'value'}));$0"
+    ]
+  },
+  "Dojo Store Apply": {
+    "prefix": "d-store-apply",
+    "description": "Dojo store apply operation",
+    "body": [
+      "store.apply([replace(store.path(${1:'path', 'to', 'value'}), ${2:newValue})]);$0"
+    ]
+  }
+}
+

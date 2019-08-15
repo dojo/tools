@@ -4,6 +4,23 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [6.0.7]
+
+- **Enhancement** - Add `defaultRoute: true` to initial entry in `d-routes` snippet.
+- **Enhancement** - All snippets are available now in both `ts` and `tsx` files, with appropriate versions being used based on file type.
+- **New Feature** - Add the following new snippets:
+  
+  | Snippet                           | Purpose                                                      |
+  | --------------------------------- | ------------------------------------------------------------ |
+  | `d-route-default`                 | route with `defaultRoute: true`                              |
+  | `d-route-default-params`          | route with default parameter values                          |
+  | `d-route-children-default-params` | route with default parameter values and children             |
+  | `d-block`                         | block function (used by block middleware)                    |
+  | `d-block-options`                 | block function with options (used by block middleware)       |
+  | `d-store-get`                     | store middleware get operation                               |
+  | `d-store-apply`                   | store middleware apply operation                             |
+  | `d-widget-classes`                | adds widget classes property                                 |
+
 ## [6.0.6]
 
 - **Enhancement** - Test runner command now prioritizes using `npm test` over direct commands, and prioritizes using the `test` script for test runner (intern or jest) detection.
