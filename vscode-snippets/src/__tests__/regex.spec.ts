@@ -93,6 +93,7 @@ describe('regex', () => {
 
 	describe('widget factory', () => {
 		const defaultExportSingleLine = `export default factory(function WidgetName({ middleware: { theme }, children }) {`;
+		const renamedMiddlewareLine = `export default factory(function WidgetName({ middleware: { theme: themeMiddleware, i18n }, properties }) {`;
 		const defaultExportSingleLineNoMiddleware = `export default factory(function WidgetName({ children }) {`;
 		const defaultExportMultiLine = `export default factory(function WidgetName({`;
 		const exportVerboseSingleLine = `export const WidgetName = factory(function WidgetName({ middleware: { theme }, children }) {`;
@@ -110,6 +111,9 @@ describe('regex', () => {
 		describe('widgetFactoryStart', () => {
 			it('matches default export single line', () => {
 				expect(regex.widgetFactoryStart.test(defaultExportSingleLine)).toBeTruthy();
+			});
+			it('matches default export renamed middleware line', () => {
+				expect(regex.widgetFactoryStart.test(renamedMiddlewareLine)).toBeTruthy();
 			});
 			it('matches default export single line with no middleware', () => {
 				expect(
@@ -160,6 +164,9 @@ describe('regex', () => {
 			it('matches default export single line', () => {
 				expect(regex.widgetFactoryEnd.test(defaultExportSingleLine)).toBeTruthy();
 			});
+			it('matches default export renamed middleware line', () => {
+				expect(regex.widgetFactoryEnd.test(renamedMiddlewareLine)).toBeTruthy();
+			});
 			it('matches default export single line with no middleware', () => {
 				expect(
 					regex.widgetFactoryEnd.test(defaultExportSingleLineNoMiddleware)
@@ -208,6 +215,13 @@ describe('regex', () => {
 		describe('widgetFactoryReplace', () => {
 			it('matches default export single line', () => {
 				expect(regex.widgetFactoryReplace.test(defaultExportSingleLine)).toBeTruthy();
+				regex.widgetFactoryReplace.lastIndex = 0;
+				expect(regex.widgetFactoryReplace.exec(defaultExportSingleLine)).toHaveLength(2);
+			});
+			it('matches default export renamed middleware line', () => {
+				expect(regex.widgetFactoryReplace.test(renamedMiddlewareLine)).toBeTruthy();
+				regex.widgetFactoryReplace.lastIndex = 0;
+				expect(regex.widgetFactoryReplace.exec(renamedMiddlewareLine)).toHaveLength(2);
 			});
 			it('does not match default export single line with no middleware', () => {
 				expect(
@@ -219,6 +233,8 @@ describe('regex', () => {
 			});
 			it('matches verbose export single line', () => {
 				expect(regex.widgetFactoryReplace.test(exportVerboseSingleLine)).toBeTruthy();
+				regex.widgetFactoryReplace.lastIndex = 0;
+				expect(regex.widgetFactoryReplace.exec(exportVerboseSingleLine)).toHaveLength(2);
 			});
 			it('does not match verbose export single line with no middleware', () => {
 				expect(
@@ -230,6 +246,8 @@ describe('regex', () => {
 			});
 			it('matches export single line', () => {
 				expect(regex.widgetFactoryReplace.test(exportSingleLine)).toBeTruthy();
+				regex.widgetFactoryReplace.lastIndex = 0;
+				expect(regex.widgetFactoryReplace.exec(exportSingleLine)).toHaveLength(2);
 			});
 			it('does not match export single line with no middleware', () => {
 				expect(regex.widgetFactoryReplace.test(exportSingleLineNoMiddleware)).toBeFalsy();
@@ -239,12 +257,18 @@ describe('regex', () => {
 			});
 			it('matches middleware alone single line', () => {
 				expect(regex.widgetFactoryReplace.test(middlewareAlone)).toBeTruthy();
+				regex.widgetFactoryReplace.lastIndex = 0;
+				expect(regex.widgetFactoryReplace.exec(middlewareAlone)).toHaveLength(2);
 			});
 			it('matches middleware alone multi line', () => {
 				expect(regex.widgetFactoryReplace.test(middlewareAloneMultiLine)).toBeTruthy();
+				regex.widgetFactoryReplace.lastIndex = 0;
+				expect(regex.widgetFactoryReplace.exec(middlewareAloneMultiLine)).toHaveLength(2);
 			});
 			it('matches non-export single line', () => {
 				expect(regex.widgetFactoryReplace.test(nonExportSingleLine)).toBeTruthy();
+				regex.widgetFactoryReplace.lastIndex = 0;
+				expect(regex.widgetFactoryReplace.exec(nonExportSingleLine)).toHaveLength(2);
 			});
 			it('does not match non-export single line with no middleware', () => {
 				expect(
@@ -261,6 +285,9 @@ describe('regex', () => {
 				expect(
 					regex.widgetFactoryMiddlewareAlone.test(defaultExportSingleLine)
 				).toBeFalsy();
+			});
+			it('does not match default export renamed middleware line', () => {
+				expect(regex.widgetFactoryMiddlewareAlone.test(renamedMiddlewareLine)).toBeFalsy();
 			});
 			it('does not match default export single line with no middleware', () => {
 				expect(

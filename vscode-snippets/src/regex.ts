@@ -5,7 +5,7 @@ export const regexFactory = () => ({
 	createLineEnd: /[}]*\);/g,
 	widgetFactoryStart: /[\t]*(?:export )*(?:default|const [a-zA-Z0-9]+[ ]*=)[ ]*[a-zA-Z0-9]+\((?:function [a-zA-Z0-9]+)*\([{]*/g,
 	widgetFactoryEnd: /[}]*\)[ ]*(?:\:[ ]*[\s\S]+)*(?:=>[ ]*)*{/g,
-	widgetFactoryReplace: /[{]*[\s\S ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, ]+\})*[\s\S ]*[\}]*[ ]*/g,
+	widgetFactoryReplace: /[{]*[\s\S ]*middleware[ ]*:[ ]*(\{[a-zA-Z0-9, :]+\})*[\s\S ]*[\}]*[ ]*/g,
 	widgetFactoryMiddlewareAlone: /middleware:[ ]*{[ ]*$/g,
 	importLine: /import [\s\S]+ from ['"]{1}[\s\S]+['"]{1}[;]*/g
 });

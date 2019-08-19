@@ -35,7 +35,7 @@ export function runTests(all = false) {
 			.replace(vscode.workspace.rootPath + sep || '', '')
 			.replace(/\\/g, '/');
 
-		let regex = /(?:it|describe)[ ]*\(['"]([\s\S]+)['"]/g;
+		let regex = /(?:it|describe|test)[ ]*\(['"]([\s\S]+)['"]/g;
 		if (runner === 'intern' && findLine(editor.document, /intern\.getInterface\('object'\)/g)) {
 			regex = /^[ \t]*(?:['"]{1}([\s\S]+)['"]{1}|([a-zA-Z0-9_]+))(?:\:|\(\))[ ]*{/g;
 		}

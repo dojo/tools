@@ -4,6 +4,11 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [6.0.9]
+
+- **Bugfix** - Properly add middleware to factory calls with renamed middleware.
+- **Bugfix** - Match `test` statements when finding the test to run in Jest.
+
 ## [6.0.8]
 
 - **New Feature** - Add the following new middleware snippets:

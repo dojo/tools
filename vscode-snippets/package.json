@@ -1,7 +1,7 @@
 {
 	"name": "vscode-dojo-snippets",
 	"displayName": "Dojo Snippets (Version 6)",
-	"version": "6.0.8",
+	"version": "6.0.9",
 	"description": "Dojo 6+ snippets and supporting commands",
 	"icon": "images/dojo-logo.png",
 	"galleryBanner": {

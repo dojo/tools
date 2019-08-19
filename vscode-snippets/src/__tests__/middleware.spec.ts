@@ -91,6 +91,20 @@ describe('widget factory', () => {
 		''
 	]);
 
+	const documentSingleLineRenamed = createDocument([
+		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import focus from '@dojo/framework/core/middleware/focus';",
+		'',
+		'const factory = create({ focus });',
+		'',
+		'export default factory(function TestWidget({ middleware: { focus: focusMiddleware }, properties }) {',
+		'\treturn (',
+		'\t\t<div>Content</div>',
+		'\t);',
+		');',
+		''
+	]);
+
 	const documentMultiLine = createDocument([
 		"import { tsx } from '@dojo/framework/core/vdom';",
 		"import focus from '@dojo/framework/core/middleware/focus';",
@@ -272,6 +286,30 @@ describe('widget factory', () => {
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				1,
 				documentSingleLine.lineAt(0).rangeIncludingLineBreak.end,
+				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
+			);
+			expect(edit.insert).toHaveBeenCalledTimes(1);
+		});
+
+		it('adds middleware to single line renamed widget factory', () => {
+			(editor as any).document = documentSingleLineRenamed;
+
+			addMiddleware('dimensions')(editor, edit);
+
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentSingleLineRenamed.lineAt(3).range,
+				'const factory = create({ focus, dimensions });'
+			);
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				2,
+				documentSingleLineRenamed.lineAt(5).range,
+				'export default factory(function TestWidget({ middleware: { focus: focusMiddleware, dimensions }, properties }) {'
+			);
+			expect(edit.replace).toHaveBeenCalledTimes(2);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				documentSingleLineRenamed.lineAt(0).rangeIncludingLineBreak.end,
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
 			expect(edit.insert).toHaveBeenCalledTimes(1);
