@@ -4,6 +4,15 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [6.0.11]
+
+- **Bugfix** - Remove extra `}` from Widget Classes Property snippet
+
+## [6.0.10]
+
+- **Enhancement** - Test Runner - Save file at start of execution.
+- **Bugfix** - Properly add theme.classes and i18n.localize lines to multi line factory calls with a single middleware line.
+
 ## [6.0.9]
 
 - **Bugfix** - Properly add middleware to factory calls with renamed middleware.

@@ -34,7 +34,7 @@ describe('widget factory', () => {
 	});
 
 	const documentEmpty = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
 		'',
 		'const factory = create();',
 		'',
@@ -47,7 +47,7 @@ describe('widget factory', () => {
 	]);
 
 	const documentNoMiddleware = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
 		'',
 		'const factory = create();',
 		'',
@@ -60,7 +60,7 @@ describe('widget factory', () => {
 	]);
 
 	const documentPropertiesNoMiddleware = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
 		'',
 		'interface TestWidgetProperties {',
 		'\tshow: boolean;',
@@ -78,7 +78,7 @@ describe('widget factory', () => {
 	]);
 
 	const documentSingleLine = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
 		"import focus from '@dojo/framework/core/middleware/focus';",
 		'',
 		'const factory = create({ focus });',
@@ -92,7 +92,7 @@ describe('widget factory', () => {
 	]);
 
 	const documentSingleLineRenamed = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
 		"import focus from '@dojo/framework/core/middleware/focus';",
 		'',
 		'const factory = create({ focus });',
@@ -106,7 +106,7 @@ describe('widget factory', () => {
 	]);
 
 	const documentMultiLine = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
 		"import focus from '@dojo/framework/core/middleware/focus';",
 		'',
 		'const factory = create({ focus });',
@@ -124,8 +124,25 @@ describe('widget factory', () => {
 		''
 	]);
 
+	const documentMultiLineSingleLineMiddleware = createDocument([
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
+		"import focus from '@dojo/framework/core/middleware/focus';",
+		'',
+		'const factory = create({ focus });',
+		'',
+		'export default factory(function TestWidget({',
+		'\tmiddleware: { focus },',
+		'\tproperties',
+		'}) {',
+		'\treturn (',
+		'\t\t<div>Content</div>',
+		'\t);',
+		');',
+		''
+	]);
+
 	const documentMultiLineCreateMultiLine = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
 		"import focus from '@dojo/framework/core/middleware/focus';",
 		'',
 		"import * as css from './TestWidget.m.css';",
@@ -148,7 +165,7 @@ describe('widget factory', () => {
 	]);
 
 	const documentMultiLineCreateMultiLineNoTabs = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
 		"import focus from '@dojo/framework/core/middleware/focus';",
 		'',
 		"import * as css from './TestWidget.m.css';",
@@ -475,6 +492,40 @@ describe('widget factory', () => {
 
 				expect(writeFileSync).not.toHaveBeenCalled();
 			});
+
+			it('adds theme.classes line correctly to multi line create widget with single line middleware', () => {
+				(editor as any).document = documentMultiLineSingleLineMiddleware;
+
+				addMiddleware('theme')(editor, edit);
+
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					1,
+					documentMultiLineSingleLineMiddleware.lineAt(3).range,
+					'const factory = create({ focus, theme });'
+				);
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					2,
+					documentMultiLineSingleLineMiddleware.lineAt(6).range,
+					'\tmiddleware: { focus, theme },'
+				);
+				expect(edit.replace).toHaveBeenCalledTimes(2);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					1,
+					documentMultiLineSingleLineMiddleware.lineAt(0).rangeIncludingLineBreak.end,
+					"import theme from '@dojo/framework/core/middleware/theme';\r\n"
+				);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					2,
+					documentMultiLineSingleLineMiddleware.lineAt(1).rangeIncludingLineBreak.end,
+					"import * as css from './TestWidget.m.css';\r\n"
+				);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					3,
+					documentMultiLineSingleLineMiddleware.lineAt(8).rangeIncludingLineBreak.end,
+					'\tconst themedCss = theme.classes(css);\r\n'
+				);
+				expect(edit.insert).toHaveBeenCalledTimes(3);
+			});
 		});
 
 		describe('i18n', () => {
@@ -537,6 +588,40 @@ describe('widget factory', () => {
 				addMiddleware('i18n')(editor, edit);
 
 				expect(writeFileSync).not.toHaveBeenCalled();
+			});
+
+			it('adds bundle line correctly to multi line create widget with single line middleware', () => {
+				(editor as any).document = documentMultiLineSingleLineMiddleware;
+
+				addMiddleware('i18n')(editor, edit);
+
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					1,
+					documentMultiLineSingleLineMiddleware.lineAt(3).range,
+					'const factory = create({ focus, i18n });'
+				);
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					2,
+					documentMultiLineSingleLineMiddleware.lineAt(6).range,
+					'\tmiddleware: { focus, i18n },'
+				);
+				expect(edit.replace).toHaveBeenCalledTimes(2);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					1,
+					documentMultiLineSingleLineMiddleware.lineAt(0).rangeIncludingLineBreak.end,
+					"import i18n from '@dojo/framework/core/middleware/i18n';\r\n"
+				);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					2,
+					documentMultiLineSingleLineMiddleware.lineAt(1).rangeIncludingLineBreak.end,
+					"import bundle from './TestWidget.nls';\r\n"
+				);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					3,
+					documentMultiLineSingleLineMiddleware.lineAt(8).rangeIncludingLineBreak.end,
+					'\tconst { messages } = i18n.localize(bundle);\r\n'
+				);
+				expect(edit.insert).toHaveBeenCalledTimes(3);
 			});
 		});
 

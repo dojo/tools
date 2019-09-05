@@ -7,6 +7,7 @@ import { findLine } from './util';
 export function runTests(all = false) {
 	const editor = vscode.window.activeTextEditor;
 	if (editor) {
+		editor.document.save();
 		const packageJson = JSON.parse(
 			readFileSync(join(vscode.workspace.rootPath || '', 'package.json'), 'utf8')
 		);

@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import { parse, join } from 'path';
 import { existsSync, writeFileSync } from 'fs';
 
@@ -95,12 +96,16 @@ export function addMiddleware(middleware: string): Callback {
 
 		let widgetFactoryMiddlewareLine = findLine(document, regex.widgetFactoryStart);
 		if (widgetFactoryMiddlewareLine) {
+			let widgetFactoryEndLine: vscode.TextLine | undefined;
 			if (!regex.widgetFactoryEnd.test(widgetFactoryMiddlewareLine.text)) {
 				const middlewareLine = findLine(document, regex.widgetFactoryReplace, {
 					startAt: widgetFactoryMiddlewareLine.lineNumber,
 					endTest: regex.widgetFactoryEnd
 				});
 				if (middlewareLine) {
+					widgetFactoryEndLine = findLine(document, regex.widgetFactoryEnd, {
+						startAt: middlewareLine.lineNumber
+					});
 					widgetFactoryMiddlewareLine = middlewareLine;
 				}
 			}
@@ -140,16 +145,20 @@ export function addMiddleware(middleware: string): Callback {
 				edit.replace(widgetFactoryMiddlewareLine.range, newFactoryMiddlewareLine);
 			}
 
+			if (!widgetFactoryEndLine) {
+				widgetFactoryEndLine = widgetFactoryMiddlewareLine;
+			}
+
 			switch (middleware) {
 				case 'theme':
 					edit.insert(
-						widgetFactoryMiddlewareLine.rangeIncludingLineBreak.end,
+						widgetFactoryEndLine.rangeIncludingLineBreak.end,
 						`${tab}const themedCss = theme.classes(css);\r\n`
 					);
 					break;
 				case 'i18n':
 					edit.insert(
-						widgetFactoryMiddlewareLine.rangeIncludingLineBreak.end,
+						widgetFactoryEndLine.rangeIncludingLineBreak.end,
 						`${tab}const { messages } = i18n.localize(bundle);\r\n`
 					);
 					break;
