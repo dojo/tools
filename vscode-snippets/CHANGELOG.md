@@ -4,6 +4,19 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [8.0.2]
+
+- **Enhancement** - Updated snippets to Dojo 8
+- **Enhancement** - Add icache middleware command now uses create factory
+- **New Feature** - Added support for `dojo test` with test commands
+- **New Feature** - Added new commands for new middleware
+
+  | Command                              | Purpose                                                           | Shortcut                 |
+  | -------------------------------------| ----------------------------------------------------------------- | ------------------------ |
+  | Dojo: Add drag middleware            | Imports and configures drag middleware for use                    |                          |
+  | Dojo: Add inert middleware           | Imports and configures inert middleware for use                   |                          |
+  | Dojo: Add resources middleware       | Imports and configures resources middleware for use               |                          |
+
 ## [6.0.11]
 
 - **Bugfix** - Remove extra `}` from Widget Classes Property snippet
@@ -61,8 +74,6 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 - **Enhancement** - Test runner command now prioritizes using `npm test` over direct commands, and prioritizes using the `test` script for test runner (intern or jest) detection.
 - **New Feature** - Add `run all tests` command, which runs all the tests in a file by default, adding `--coverage` to jest runs. Includes new menu item and shortcut (Ctrl+Shift+Alt+T on windows or Cmd+Shift+Alt+T on mac)
-  
-  
 
   | Command                              | Purpose                                                           | Shortcut                 |
   | -------------------------------------| ----------------------------------------------------------------- | ------------------------ |
