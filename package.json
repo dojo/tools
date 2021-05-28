@@ -3,18 +3,18 @@
 	"version": "1.0.0",
 	"description": "Dojo Tools",
 	"devDependencies": {
-		"husky": "3.0.3",
-		"lint-staged": "9.2.1",
-		"prettier": "1.18.2"
+		"husky": "6.0.0",
+		"lint-staged": "11.0.0",
+		"prettier": "2.3.0"
 	},
 	"scripts": {
 		"precommit": "lint-staged",
-		"prettier": "prettier --write \"**/*.{ts,tsx,css}\""
+		"prettier": "prettier --write \"**/*.{ts,tsx,css}\"",
+		"prepare": "husky install"
 	},
 	"lint-staged": {
 		"*.{ts,tsx,css}": [
-			"prettier --write",
-			"git add"
+			"prettier --write"
 		]
 	},
 	"prettier": {
@@ -23,10 +23,5 @@
 		"useTabs": true,
 		"printWidth": 100,
 		"arrowParens": "always"
-	},
-	"husky": {
-		"hooks": {
-			"pre-commit": "npm run precommit"
-		}
 	}
 }

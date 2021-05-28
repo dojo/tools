@@ -1,7 +1,6 @@
 export const regexFactory = () => ({
 	vdomImport: /import \{[\w,:= ]+\} from '@dojo\/framework\/core\/vdom';/g,
-	middlewareImport:
-		/import [\w{},:= ]+ from ['"]@dojo\/framework\/core\/middleware\/[\w]+['"];/g,
+	middlewareImport: /import [\w{},:= ]+ from ['"]@dojo\/framework\/core\/middleware\/[\w]+['"];/g,
 	createLine: /create\(({[a-zA-Z0-9, ]*\})*[\)]*/g,
 	createAloneLine: /create[ ]*\({/g,
 	createLineEnd: /[}]*\);/g,

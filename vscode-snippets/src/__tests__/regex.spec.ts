@@ -19,7 +19,9 @@ describe('regex', () => {
 		});
 		it('matches renamed import', () => {
 			expect(
-				regex.vdomImport.test("import { create, tsx: something } from '@dojo/framework/core/vdom';")
+				regex.vdomImport.test(
+					"import { create, tsx: something } from '@dojo/framework/core/vdom';"
+				)
 			).toBeTruthy();
 		});
 	});
