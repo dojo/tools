@@ -1,8 +1,8 @@
 {
 	"name": "vscode-dojo-snippets",
-	"displayName": "Dojo Snippets (Version 6)",
-	"version": "6.0.11",
-	"description": "Dojo 6+ snippets and supporting commands",
+	"displayName": "Dojo Snippets (Version 8)",
+	"version": "8.0.0",
+	"description": "Dojo 8+ snippets and supporting commands",
 	"icon": "images/dojo-logo.png",
 	"galleryBanner": {
 		"color": "#212329",
@@ -17,11 +17,11 @@
 	"keywords": [
 		"Dojo",
 		"Dojo 2",
-		"Dojo 6",
+		"Dojo 8",
 		"TypeScript"
 	],
 	"engines": {
-		"vscode": "^1.36.0"
+		"vscode": "^1.56.0"
 	},
 	"categories": [
 		"Snippets",
