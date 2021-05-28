@@ -16,30 +16,30 @@ export function createDocument(
 				range: {
 					start: {
 						line: lineNumber,
-						character: 0
+						character: 0,
 					} as vscode.Position,
 					end: {
 						line: lineNumber,
-						character: line.length
+						character: line.length,
 					} as vscode.Position,
 					isEmpty: Boolean(line.trim().length),
-					isSingleLine: true
+					isSingleLine: true,
 				} as vscode.Range,
 				rangeIncludingLineBreak: {
 					start: {
 						line: lineNumber,
-						character: 0
+						character: 0,
 					} as vscode.Position,
 					end: {
 						line: lineNumber,
-						character: line.length + 1
+						character: line.length + 1,
 					} as vscode.Position,
 					isEmpty: Boolean(line.trim().length),
-					isSingleLine: true
+					isSingleLine: true,
 				} as vscode.Range,
 				firstNonWhitespaceCharacterIndex: line.length - line.trimLeft().length,
-				isEmptyOrWhitespace: Boolean(line.trim().length)
+				isEmptyOrWhitespace: Boolean(line.trim().length),
 			} as vscode.TextLine;
-		}
+		},
 	} as vscode.TextDocument;
 }

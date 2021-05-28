@@ -66,7 +66,7 @@ export const addProperties: Callback = (editor, edit) => {
 		} else {
 			const createEndLine = findLine(document, regex.createLineEnd, {
 				startAt: createLine.lineNumber,
-				endTest: /export/g
+				endTest: /export/g,
 			});
 			if (createEndLine && !/export/g.test(createEndLine.text)) {
 				line = createEndLine;

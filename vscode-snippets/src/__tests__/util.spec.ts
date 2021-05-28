@@ -28,7 +28,7 @@ describe('util', () => {
 			'\t\t<div classes={themedCss.root}>{children()}</div>',
 			'\t);',
 			');',
-			''
+			'',
 		]);
 
 		beforeEach(() => {
@@ -52,14 +52,14 @@ describe('util', () => {
 
 		it('finds line with end test', () => {
 			const result = findLine(document, regex.widgetFactoryMiddlewareAlone, {
-				endTest: regex.widgetFactoryEnd
+				endTest: regex.widgetFactoryEnd,
 			});
 			expect(result).toEqual(document.lineAt(8));
 		});
 
 		it('does not find line with end test', () => {
 			const result = findLine(document, /NOT ON ANY LINE/g, {
-				endTest: regex.widgetFactoryEnd
+				endTest: regex.widgetFactoryEnd,
 			});
 			expect(result).toEqual(document.lineAt(12));
 		});

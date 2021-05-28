@@ -7,14 +7,54 @@ describe('regex', () => {
 	});
 
 	describe('vdom import', () => {
-		const singleImport = "import { create } from '@dojo/framework/core/vdom';";
-		const multiImport = "import { create, tsx } from '@dojo/framework/core/vdom';";
-
 		it('matches single import', () => {
-			expect(regex.vdomImport.test(singleImport)).toBeTruthy();
+			expect(
+				regex.vdomImport.test("import { create } from '@dojo/framework/core/vdom';")
+			).toBeTruthy();
 		});
 		it('matches multi import', () => {
-			expect(regex.vdomImport.test(multiImport)).toBeTruthy();
+			expect(
+				regex.vdomImport.test("import { create, tsx } from '@dojo/framework/core/vdom';")
+			).toBeTruthy();
+		});
+		it('matches renamed import', () => {
+			expect(
+				regex.vdomImport.test("import { create, tsx: something } from '@dojo/framework/core/vdom';")
+			).toBeTruthy();
+		});
+	});
+
+	describe('middleware import', () => {
+		it('matches default import', () => {
+			expect(
+				regex.middlewareImport.test(
+					"import middlewareDefault from '@dojo/framework/core/middleware/middlewareName';"
+				)
+			).toBeTruthy();
+		});
+
+		it('matches named import', () => {
+			expect(
+				regex.middlewareImport.test(
+					"import { middlewareNamed } from '@dojo/framework/core/middleware/middlewareName';"
+				)
+			).toBeTruthy();
+		});
+
+		it('matches multi import', () => {
+			expect(
+				regex.middlewareImport.test(
+					"import { middlewareNamed, somethingElse } from '@dojo/framework/core/middleware/middlewareName';"
+				)
+			).toBeTruthy();
+		});
+
+		it('matches renamed import', () => {
+			expect(
+				regex.middlewareImport.test(
+					"import { middlewareNamed, somethingElse: named } from '@dojo/framework/core/middleware/middlewareName';"
+				)
+			).toBeTruthy();
 		});
 	});
 

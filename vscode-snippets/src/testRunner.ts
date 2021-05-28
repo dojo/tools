@@ -21,8 +21,7 @@ export function runTests(all = false) {
 			useNpmTest = true;
 			if (packageJson.scripts.test.includes('jest')) {
 				runner = 'jest';
-			}
-			else if (packageJson.scripts.test.includes('dojo')) {
+			} else if (packageJson.scripts.test.includes('dojo')) {
 				runner = 'dojo';
 			}
 		} else if (
@@ -46,8 +45,7 @@ export function runTests(all = false) {
 		let regex = /(it|describe|test)[ ]*\(['"]([\s\S]+)['"]/g;
 		if (runner === 'intern' && findLine(editor.document, internObjectInterfaceRegex)) {
 			regex = internObjectTestRegex;
-		}
-		else if (runner === 'dojo') {
+		} else if (runner === 'dojo') {
 			if (findLine(editor.document, internObjectInterfaceRegex)) {
 				regex = internObjectTestRegex;
 
@@ -83,7 +81,7 @@ export function runTests(all = false) {
 		if (!all) {
 			const testLine = findLine(editor.document, regex, {
 				reverse: true,
-				startAt: editor.selection.anchor.line
+				startAt: editor.selection.anchor.line,
 			});
 			if (testLine) {
 				regex.lastIndex = 0;
@@ -91,7 +89,7 @@ export function runTests(all = false) {
 				if (match && match.length > 2 && match[2]) {
 					test = match[2];
 
-					if ((runner === "dojo" || runner === 'intern') && match[1] === 'describe') {
+					if ((runner === 'dojo' || runner === 'intern') && match[1] === 'describe') {
 						if (`${test}.*` === fileName) {
 							test = '';
 						} else {
@@ -123,7 +121,9 @@ export function runTests(all = false) {
 			if (test) {
 				terminal.sendText(`${commandPrefix} --filter '${fileName}${test}'`);
 			} else {
-				terminal.sendText(`${commandPrefix} --filter '${fileName.length > 0 ? fileName : test}'`);
+				terminal.sendText(
+					`${commandPrefix} --filter '${fileName.length > 0 ? fileName : test}'`
+				);
 			}
 		} else {
 			let commandPrefix = 'npx jest';

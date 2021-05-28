@@ -19,9 +19,14 @@ export function addMiddleware(middleware: string): Callback {
 		}
 
 		const importStatement = `import ${importName} from \'@dojo/framework/core/middleware/${middleware}\';\r\n`;
-		const importLine = findLine(document, regex.vdomImport);
-		if (importLine) {
-			edit.insert(importLine.rangeIncludingLineBreak.end, importStatement);
+		const lastMiddlewareImportLine = findLine(document, regex.middlewareImport, { reverse: true });
+		if (lastMiddlewareImportLine) {
+			edit.insert(lastMiddlewareImportLine.rangeIncludingLineBreak.end, importStatement);
+		} else {
+			const vdomImportLine = findLine(document, regex.vdomImport);
+			if (vdomImportLine) {
+				edit.insert(vdomImportLine.rangeIncludingLineBreak.end, importStatement);
+			}
 		}
 
 		const createLine = findLine(document, regex.createLine);
@@ -100,11 +105,11 @@ export function addMiddleware(middleware: string): Callback {
 			if (!regex.widgetFactoryEnd.test(widgetFactoryMiddlewareLine.text)) {
 				const middlewareLine = findLine(document, regex.widgetFactoryReplace, {
 					startAt: widgetFactoryMiddlewareLine.lineNumber,
-					endTest: regex.widgetFactoryEnd
+					endTest: regex.widgetFactoryEnd,
 				});
 				if (middlewareLine) {
 					widgetFactoryEndLine = findLine(document, regex.widgetFactoryEnd, {
-						startAt: middlewareLine.lineNumber
+						startAt: middlewareLine.lineNumber,
 					});
 					widgetFactoryMiddlewareLine = middlewareLine;
 				}
