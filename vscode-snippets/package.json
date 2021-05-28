@@ -1,8 +1,8 @@
 {
 	"name": "vscode-dojo-snippets",
-	"displayName": "Dojo Snippets (Version 6)",
-	"version": "6.0.11",
-	"description": "Dojo 6+ snippets and supporting commands",
+	"displayName": "Dojo Snippets (Version 8)",
+	"version": "8.0.2",
+	"description": "Dojo 8+ snippets and supporting commands",
 	"icon": "images/dojo-logo.png",
 	"galleryBanner": {
 		"color": "#212329",
@@ -17,11 +17,11 @@
 	"keywords": [
 		"Dojo",
 		"Dojo 2",
-		"Dojo 6",
+		"Dojo 8",
 		"TypeScript"
 	],
 	"engines": {
-		"vscode": "^1.36.0"
+		"vscode": "^1.56.0"
 	},
 	"categories": [
 		"Snippets",
@@ -29,18 +29,21 @@
 	],
 	"main": "./out/extension",
 	"activationEvents": [
-		"onCommand:dojo.addi18n",
-		"onCommand:dojo.addTheme",
 		"onCommand:dojo.addBlock",
 		"onCommand:dojo.addBreakpoint",
 		"onCommand:dojo.addCache",
-		"onCommand:dojo.addIcache",
+		"onCommand:dojo.addDimensions",
+		"onCommand:dojo.addDrag",
 		"onCommand:dojo.addFocus",
+		"onCommand:dojo.addi18n",
+		"onCommand:dojo.addIcache",
+		"onCommand:dojo.addInert",
 		"onCommand:dojo.addIntersection",
 		"onCommand:dojo.addResize",
-		"onCommand:dojo.addValidity",
+		"onCommand:dojo.addResources",
 		"onCommand:dojo.addStore",
-		"onCommand:dojo.addDimensions",
+		"onCommand:dojo.addTheme",
+		"onCommand:dojo.addValidity",
 		"onCommand:dojo.addProperties",
 		"onCommand:dojo.addChildren",
 		"onCommand:dojo.runAllTests",
@@ -67,16 +70,6 @@
 		],
 		"commands": [
 			{
-				"command": "dojo.addi18n",
-				"title": "Add i18n middleware",
-				"category": "Dojo"
-			},
-			{
-				"command": "dojo.addTheme",
-				"title": "Add theme middleware",
-				"category": "Dojo"
-			},
-			{
 				"command": "dojo.addBlock",
 				"title": "Add block middleware",
 				"category": "Dojo"
@@ -92,13 +85,33 @@
 				"category": "Dojo"
 			},
 			{
-				"command": "dojo.addIcache",
-				"title": "Add icache middleware",
+				"command": "dojo.addDimensions",
+				"title": "Add dimensions middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addDrag",
+				"title": "Add drag middleware",
 				"category": "Dojo"
 			},
 			{
 				"command": "dojo.addFocus",
 				"title": "Add focus middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addi18n",
+				"title": "Add i18n middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addIcache",
+				"title": "Add icache middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addInert",
+				"title": "Add inert middleware",
 				"category": "Dojo"
 			},
 			{
@@ -112,8 +125,8 @@
 				"category": "Dojo"
 			},
 			{
-				"command": "dojo.addValidity",
-				"title": "Add validity middleware",
+				"command": "dojo.addResources",
+				"title": "Add resources middleware",
 				"category": "Dojo"
 			},
 			{
@@ -122,8 +135,13 @@
 				"category": "Dojo"
 			},
 			{
-				"command": "dojo.addDimensions",
-				"title": "Add dimensions middleware",
+				"command": "dojo.addTheme",
+				"title": "Add theme middleware",
+				"category": "Dojo"
+			},
+			{
+				"command": "dojo.addValidity",
+				"title": "Add validity middleware",
 				"category": "Dojo"
 			},
 			{
@@ -179,6 +197,7 @@
 		]
 	},
 	"scripts": {
+		"publish": "vsce publish",
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
@@ -225,11 +244,13 @@
 		"usePathForSuiteName": "true"
 	},
 	"devDependencies": {
-		"@types/jest": "24.0.17",
+		"@types/jest": "26.0.23",
 		"@types/node": "10.14.14",
-		"jest": "24.8.0",
-		"ts-jest": "24.0.2",
-		"typescript": "3.4.5",
-		"vscode": "1.1.36"
+		"@types/vscode": "1.56.0",
+		"jest": "27.0.1",
+		"prettier": "2.3.0",
+		"ts-jest": "27.0.1",
+		"typescript": "4.3.2",
+		"vsce": "1.88.0"
 	}
 }

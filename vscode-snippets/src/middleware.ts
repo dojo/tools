@@ -13,15 +13,34 @@ export function addMiddleware(middleware: string): Callback {
 		const regex = regexFactory();
 		let importName = middleware;
 		if (middleware === 'store') {
-			importName = `create${importName.charAt(0).toUpperCase()}${importName.slice(
-				1
-			)}Middleware`;
+			importName = `createStoreMiddleware`;
+		} else if (middleware === 'resources') {
+			importName = `{ createResourceMiddleware }`;
+		} else if (middleware === 'icache') {
+			importName = `{ createICacheMiddleware }`;
 		}
 
 		const importStatement = `import ${importName} from \'@dojo/framework/core/middleware/${middleware}\';\r\n`;
-		const importLine = findLine(document, regex.vdomImport);
-		if (importLine) {
-			edit.insert(importLine.rangeIncludingLineBreak.end, importStatement);
+		const lastMiddlewareImportLine = findLine(document, regex.middlewareImport, { reverse: true });
+		if (lastMiddlewareImportLine) {
+			edit.insert(lastMiddlewareImportLine.rangeIncludingLineBreak.end, importStatement);
+		} else {
+			const vdomImportLine = findLine(document, regex.vdomImport);
+			if (vdomImportLine) {
+				edit.insert(vdomImportLine.rangeIncludingLineBreak.end, importStatement);
+			}
+		}
+
+		// If icache create interface
+		const file = parse(document.fileName);
+		if (middleware === 'icache') {
+			const lastImportStatement = findLine(document, regex.importLine, { reverse: true });
+			if (lastImportStatement) {
+				edit.insert(
+					lastImportStatement.rangeIncludingLineBreak.end,
+					`\r\ninterface ${file.name}State {\r\n\r\n}\r\n`
+				);
+			}
 		}
 
 		const createLine = findLine(document, regex.createLine);
@@ -53,6 +72,18 @@ export function addMiddleware(middleware: string): Callback {
 					edit.insert(
 						createLine.range.start,
 						`const ${middleware} = ${importName}();\r\n`
+					);
+					break;
+				case 'icache':
+					edit.insert(
+						createLine.range.start,
+						`const ${middleware} = createICacheMiddleware<${file.name}State>();\r\n`
+					);
+					break;
+				case 'resources':
+					edit.insert(
+						createLine.range.start,
+						`const ${middleware} = createResourceMiddleware<REPLACE_ME>();\r\n`
 					);
 					break;
 			}
@@ -100,11 +131,11 @@ export function addMiddleware(middleware: string): Callback {
 			if (!regex.widgetFactoryEnd.test(widgetFactoryMiddlewareLine.text)) {
 				const middlewareLine = findLine(document, regex.widgetFactoryReplace, {
 					startAt: widgetFactoryMiddlewareLine.lineNumber,
-					endTest: regex.widgetFactoryEnd
+					endTest: regex.widgetFactoryEnd,
 				});
 				if (middlewareLine) {
 					widgetFactoryEndLine = findLine(document, regex.widgetFactoryEnd, {
-						startAt: middlewareLine.lineNumber
+						startAt: middlewareLine.lineNumber,
 					});
 					widgetFactoryMiddlewareLine = middlewareLine;
 				}

@@ -12,21 +12,21 @@ describe('widget factory', () => {
 	const editor = {
 		options: {
 			insertSpaces: false,
-			tabSize: 2
+			tabSize: 2,
 		},
 		selection: {
 			anchor: {
 				line: 14,
-				character: 32
-			}
-		}
+				character: 32,
+			},
+		},
 	} as vscode.TextEditor;
 
 	const edit = {
 		replace: jest.fn(),
 		insert: jest.fn(),
 		delete: jest.fn(),
-		setEndOfLine: jest.fn()
+		setEndOfLine: jest.fn(),
 	} as vscode.TextEditorEdit;
 
 	beforeEach(() => {
@@ -43,7 +43,7 @@ describe('widget factory', () => {
 		'\t\t<div>Content</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentNoMiddleware = createDocument([
@@ -56,7 +56,7 @@ describe('widget factory', () => {
 		'\t\t<div>{children()}</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentPropertiesNoMiddleware = createDocument([
@@ -74,7 +74,7 @@ describe('widget factory', () => {
 		'\t\tshow && <div>Content</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentSingleLine = createDocument([
@@ -88,7 +88,7 @@ describe('widget factory', () => {
 		'\t\t<div>Content</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentSingleLineRenamed = createDocument([
@@ -102,7 +102,7 @@ describe('widget factory', () => {
 		'\t\t<div>Content</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentMultiLine = createDocument([
@@ -121,7 +121,7 @@ describe('widget factory', () => {
 		'\t\t<div>Content</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentMultiLineSingleLineMiddleware = createDocument([
@@ -138,7 +138,7 @@ describe('widget factory', () => {
 		'\t\t<div>Content</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentMultiLineCreateMultiLine = createDocument([
@@ -161,7 +161,7 @@ describe('widget factory', () => {
 		'\t\t<div>Content</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentMultiLineCreateMultiLineNoTabs = createDocument([
@@ -184,7 +184,7 @@ describe('widget factory', () => {
 		'<div>Content</div>',
 		');',
 		');',
-		''
+		'',
 	]);
 
 	const badDocument = createDocument([
@@ -193,7 +193,7 @@ describe('widget factory', () => {
 		'\t\t<div>Content</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const badFormattingDocument = createDocument([
@@ -208,7 +208,7 @@ describe('widget factory', () => {
 		'\t\t<div>Content</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	describe('addMiddleware', () => {
@@ -302,7 +302,7 @@ describe('widget factory', () => {
 			expect(edit.replace).toHaveBeenCalledTimes(2);
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				1,
-				documentSingleLine.lineAt(0).rangeIncludingLineBreak.end,
+				documentSingleLine.lineAt(1).rangeIncludingLineBreak.end,
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
 			expect(edit.insert).toHaveBeenCalledTimes(1);
@@ -326,7 +326,7 @@ describe('widget factory', () => {
 			expect(edit.replace).toHaveBeenCalledTimes(2);
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				1,
-				documentSingleLineRenamed.lineAt(0).rangeIncludingLineBreak.end,
+				documentSingleLineRenamed.lineAt(1).rangeIncludingLineBreak.end,
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
 			expect(edit.insert).toHaveBeenCalledTimes(1);
@@ -345,7 +345,7 @@ describe('widget factory', () => {
 			expect(edit.replace).toHaveBeenCalledTimes(1);
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				1,
-				documentMultiLine.lineAt(0).rangeIncludingLineBreak.end,
+				documentMultiLine.lineAt(1).rangeIncludingLineBreak.end,
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
 			expect(edit.insert).toHaveBeenNthCalledWith(
@@ -364,7 +364,7 @@ describe('widget factory', () => {
 			expect(edit.replace).not.toHaveBeenCalled();
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				1,
-				documentMultiLineCreateMultiLine.lineAt(0).rangeIncludingLineBreak.end,
+				documentMultiLineCreateMultiLine.lineAt(1).rangeIncludingLineBreak.end,
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
 			expect(edit.insert).toHaveBeenNthCalledWith(
@@ -388,7 +388,7 @@ describe('widget factory', () => {
 			expect(edit.replace).not.toHaveBeenCalled();
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				1,
-				documentMultiLineCreateMultiLineNoTabs.lineAt(0).rangeIncludingLineBreak.end,
+				documentMultiLineCreateMultiLineNoTabs.lineAt(1).rangeIncludingLineBreak.end,
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
 			expect(edit.insert).toHaveBeenNthCalledWith(
@@ -511,7 +511,7 @@ describe('widget factory', () => {
 				expect(edit.replace).toHaveBeenCalledTimes(2);
 				expect(edit.insert).toHaveBeenNthCalledWith(
 					1,
-					documentMultiLineSingleLineMiddleware.lineAt(0).rangeIncludingLineBreak.end,
+					documentMultiLineSingleLineMiddleware.lineAt(1).rangeIncludingLineBreak.end,
 					"import theme from '@dojo/framework/core/middleware/theme';\r\n"
 				);
 				expect(edit.insert).toHaveBeenNthCalledWith(
@@ -608,7 +608,7 @@ describe('widget factory', () => {
 				expect(edit.replace).toHaveBeenCalledTimes(2);
 				expect(edit.insert).toHaveBeenNthCalledWith(
 					1,
-					documentMultiLineSingleLineMiddleware.lineAt(0).rangeIncludingLineBreak.end,
+					documentMultiLineSingleLineMiddleware.lineAt(1).rangeIncludingLineBreak.end,
 					"import i18n from '@dojo/framework/core/middleware/i18n';\r\n"
 				);
 				expect(edit.insert).toHaveBeenNthCalledWith(

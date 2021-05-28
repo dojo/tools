@@ -8,21 +8,21 @@ describe('widget factory', () => {
 	const editor = {
 		options: {
 			insertSpaces: false,
-			tabSize: 2
+			tabSize: 2,
 		},
 		selection: {
 			anchor: {
 				line: 14,
-				character: 32
-			}
-		}
+				character: 32,
+			},
+		},
 	} as vscode.TextEditor;
 
 	const edit = {
 		replace: jest.fn(),
 		insert: jest.fn(),
 		delete: jest.fn(),
-		setEndOfLine: jest.fn()
+		setEndOfLine: jest.fn(),
 	} as vscode.TextEditorEdit;
 
 	beforeEach(() => {
@@ -42,7 +42,7 @@ describe('widget factory', () => {
 		'\t\t<div classes={themedCss.root}>{}</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentSingleLine = createDocument([
@@ -59,7 +59,7 @@ describe('widget factory', () => {
 		'\t\t<div classes={themedCss.root}>{}</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentMultiLine = createDocument([
@@ -80,7 +80,7 @@ describe('widget factory', () => {
 		'\t\t<div classes={themedCss.root}>{}</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const documentMultiLineCreateMultiLine = createDocument([
@@ -103,7 +103,7 @@ describe('widget factory', () => {
 		'\t\t<div classes={themedCss.root}>{}</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const badDocument = createDocument([
@@ -113,7 +113,7 @@ describe('widget factory', () => {
 		'\t\t<div classes={themedCss.root}>{}</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	const badFormattingDocument = createDocument([
@@ -128,7 +128,7 @@ describe('widget factory', () => {
 		'\t\t<div classes={themedCss.root}>{}</div>',
 		'\t);',
 		');',
-		''
+		'',
 	]);
 
 	describe('addProperties', () => {

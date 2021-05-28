@@ -7,7 +7,7 @@ jest.mock('vscode');
 describe('extension', () => {
 	it('activate', () => {
 		const context: vscode.ExtensionContext = {
-			subscriptions: []
+			subscriptions: [],
 		} as any;
 		activate(context);
 
