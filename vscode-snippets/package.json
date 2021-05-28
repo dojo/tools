@@ -1,7 +1,7 @@
 {
 	"name": "vscode-dojo-snippets",
 	"displayName": "Dojo Snippets (Version 8)",
-	"version": "8.0.0",
+	"version": "8.0.1",
 	"description": "Dojo 8+ snippets and supporting commands",
 	"icon": "images/dojo-logo.png",
 	"galleryBanner": {
