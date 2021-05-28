@@ -21,7 +21,9 @@ export function addMiddleware(middleware: string): Callback {
 		}
 
 		const importStatement = `import ${importName} from \'@dojo/framework/core/middleware/${middleware}\';\r\n`;
-		const lastMiddlewareImportLine = findLine(document, regex.middlewareImport, { reverse: true });
+		const lastMiddlewareImportLine = findLine(document, regex.middlewareImport, {
+			reverse: true,
+		});
 		if (lastMiddlewareImportLine) {
 			edit.insert(lastMiddlewareImportLine.rangeIncludingLineBreak.end, importStatement);
 		} else {
