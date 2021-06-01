@@ -3,12 +3,10 @@ import { sep, join } from 'path';
 import { readFileSync } from 'fs';
 
 import { findLine } from './util';
-
-const registerSuiteRegex = /registerSuite\('([\w\W]*)',[\s]*{/g;
-const internObjectInterfaceRegex = /intern\.getInterface\('object'\)/g;
-const internObjectTestRegex = /^[ \t]*(?:['"]{1}([\s\S]+)['"]{1}|([a-zA-Z0-9_]+))(?:\:|\(\))[ ]*{/g;
+import { regexFactory } from './regex';
 
 export function runTests(all = false) {
+	const regex = regexFactory();
 	const editor = vscode.window.activeTextEditor;
 	if (editor) {
 		editor.document.save();
@@ -42,19 +40,19 @@ export function runTests(all = false) {
 			.replace(vscode.workspace.rootPath + sep || '', '')
 			.replace(/\\/g, '/');
 
-		let regex = /(it|describe|test)[ ]*\(['"]([\s\S]+)['"]/g;
-		if (runner === 'intern' && findLine(editor.document, internObjectInterfaceRegex)) {
-			regex = internObjectTestRegex;
+		let testRegex = regex.testRegex;
+		if (runner === 'intern' && findLine(editor.document, regex.internObjectInterfaceRegex)) {
+			testRegex = regex.internObjectTestRegex;
 		} else if (runner === 'dojo') {
-			if (findLine(editor.document, internObjectInterfaceRegex)) {
-				regex = internObjectTestRegex;
+			if (findLine(editor.document, regex.internObjectInterfaceRegex)) {
+				testRegex = regex.internObjectTestRegex;
 
-				const suiteLine = findLine(editor.document, registerSuiteRegex);
+				const suiteLine = findLine(editor.document, regex.registerSuiteRegex);
 				if (suiteLine) {
-					registerSuiteRegex.lastIndex = 0;
-					const match = registerSuiteRegex.exec(suiteLine.text);
+					regex.registerSuiteRegex.lastIndex = 0;
+					const match = regex.registerSuiteRegex.exec(suiteLine.text);
 					if (match && match.length > 1) {
-						fileName = `${match[1]} - `;
+						fileName = `${match[1]}.*`;
 					} else {
 						fileName = '';
 					}
@@ -62,10 +60,10 @@ export function runTests(all = false) {
 					fileName = '';
 				}
 			} else {
-				const suiteLine = findLine(editor.document, regex);
+				const suiteLine = findLine(editor.document, testRegex);
 				if (suiteLine) {
-					regex.lastIndex = 0;
-					const match = regex.exec(suiteLine.text);
+					testRegex.lastIndex = 0;
+					const match = testRegex.exec(suiteLine.text);
 					if (match && match.length > 2) {
 						fileName = `${match[2]}.*`;
 					} else {
@@ -79,13 +77,13 @@ export function runTests(all = false) {
 
 		let test: string | undefined;
 		if (!all) {
-			const testLine = findLine(editor.document, regex, {
+			const testLine = findLine(editor.document, testRegex, {
 				reverse: true,
 				startAt: editor.selection.anchor.line,
 			});
 			if (testLine) {
-				regex.lastIndex = 0;
-				const match = regex.exec(testLine.text);
+				testRegex.lastIndex = 0;
+				const match = testRegex.exec(testLine.text);
 				if (match && match.length > 2 && match[2]) {
 					test = match[2];
 
