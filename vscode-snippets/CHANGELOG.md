@@ -4,6 +4,15 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [8.0.4]
+
+- **Bugfix** - Fix partial matches to describe, test and it during test name detection.
+
+## [8.0.3]
+
+- **Bugfix** - Update intern and dojo test's object interface test regex to avoid picking up on object definitions.
+- **Bugfix** - For intern and dojo test, handle `describe` statements differently from `it` and `test` when generating fetch pattern.
+
 ## [8.0.2]
 
 - **Enhancement** - Updated snippets to Dojo 8

@@ -384,4 +384,99 @@ describe('regex', () => {
 			});
 		});
 	});
+
+	describe('test runner', () => {
+		describe('registerSuiteRegex', () => {
+			it('matches register suite call', () => {
+				expect(regex.registerSuiteRegex.test("registerSuite('TextInput', {")).toBeTruthy();
+			});
+		});
+
+		describe('internObjectInterfaceRegex', () => {
+			it('matches intern object import', () => {
+				expect(
+					regex.internObjectInterfaceRegex.test("intern.getInterface('object')")
+				).toBeTruthy();
+			});
+		});
+
+		describe('internObjectTestRegex', () => {
+			it('matches test function', () => {
+				expect(regex.internObjectTestRegex.test('testName() {')).toBeTruthy();
+			});
+
+			it('matches quoted test function', () => {
+				expect(regex.internObjectTestRegex.test("'test name'() {")).toBeTruthy();
+			});
+
+			it('matches double quoted test function', () => {
+				expect(regex.internObjectTestRegex.test('"test name"() {')).toBeTruthy();
+			});
+
+			it('handles tabs at start of test function', () => {
+				expect(regex.internObjectTestRegex.test('	"test name"() {')).toBeTruthy();
+			});
+
+			it('handle spaces at start of test function', () => {
+				expect(regex.internObjectTestRegex.test('   "test name"() {')).toBeTruthy();
+			});
+
+			it('does not match test suites', () => {
+				expect(regex.internObjectTestRegex.test('testSuite: {')).toBeFalsy();
+			});
+
+			it('does not match quoted test suites', () => {
+				expect(regex.internObjectTestRegex.test("'test suite': {")).toBeFalsy();
+			});
+
+			it('does not match double quoted test suites', () => {
+				expect(regex.internObjectTestRegex.test('"test suite": {')).toBeFalsy();
+			});
+
+			it('handles tabs at start of test suites', () => {
+				expect(regex.internObjectTestRegex.test('	"test suite": {')).toBeFalsy();
+			});
+
+			it('handle spaces at start of test suites', () => {
+				expect(regex.internObjectTestRegex.test('   "test suite": {')).toBeFalsy();
+			});
+		});
+
+		describe('testRegex', () => {
+			it('matches describe', () => {
+				const line = "describe('test name', () => {";
+				expect(regex.testRegex.test(line)).toBeTruthy();
+				regex.testRegex.lastIndex = 0;
+				const match = regex.testRegex.exec(line);
+				expect(match).toHaveLength(3);
+				expect(match?.[1]).toBe('describe');
+				expect(match?.[2]).toBe('test name');
+			});
+
+			it('matches it', () => {
+				const line = "it('test name', () => {";
+				expect(regex.testRegex.test(line)).toBeTruthy();
+				regex.testRegex.lastIndex = 0;
+				const match = regex.testRegex.exec(line);
+				expect(match).toHaveLength(3);
+				expect(match?.[1]).toBe('it');
+				expect(match?.[2]).toBe('test name');
+			});
+
+			it('matches test', () => {
+				const line = "test('test name', () => {";
+				expect(regex.testRegex.test(line)).toBeTruthy();
+				regex.testRegex.lastIndex = 0;
+				const match = regex.testRegex.exec(line);
+				expect(match).toHaveLength(3);
+				expect(match?.[1]).toBe('test');
+				expect(match?.[2]).toBe('test name');
+			});
+
+			it('should not match if has leading characters', () => {
+				const line = "const parts = input.split('|');";
+				expect(regex.testRegex.test(line)).toBeFalsy();
+			});
+		});
+	});
 });
