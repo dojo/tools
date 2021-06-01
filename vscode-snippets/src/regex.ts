@@ -13,5 +13,5 @@ export const regexFactory = () => ({
 	registerSuiteRegex: /registerSuite\('([\w\W]*)',[\s]*{/g,
 	internObjectInterfaceRegex: /intern\.getInterface\('object'\)/g,
 	internObjectTestRegex: /^[ \t]*['"]{0,1}([\w ]+)['"]{0,1}\(\)[ \t]*\{[ \t]*$/g,
-	testRegex: /(it|describe|test)[ ]*\(['"]([\s\S]+)['"]/g,
+	testRegex: /^[ \t]*(it|describe|test)[ ]*\(['"]([\s\S]+)['"]/g,
 });

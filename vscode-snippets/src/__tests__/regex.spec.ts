@@ -472,6 +472,11 @@ describe('regex', () => {
 				expect(match?.[1]).toBe('test');
 				expect(match?.[2]).toBe('test name');
 			});
+
+			it('should not match if has leading characters', () => {
+				const line = "const parts = input.split('|');";
+				expect(regex.testRegex.test(line)).toBeFalsy();
+			});
 		});
 	});
 });
