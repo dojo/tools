@@ -4,7 +4,12 @@ import { existsSync, writeFileSync } from 'fs';
 
 import { Callback } from './interface';
 import { regexFactory } from './regex';
-import { findLine, getTab } from './util';
+import {
+	findLastMiddlewareInCreateLine,
+	findLastMiddlewareInWidgetFactoryLine,
+	findLine,
+	getTab,
+} from './util';
 
 export function addMiddleware(middleware: string): Callback {
 	return (editor, edit) => {
@@ -28,21 +33,23 @@ export function addMiddleware(middleware: string): Callback {
 			edit.insert(lastMiddlewareImportLine.rangeIncludingLineBreak.end, importStatement);
 		} else {
 			const vdomImportLine = findLine(document, regex.vdomImport);
-			if (vdomImportLine) {
-				edit.insert(vdomImportLine.rangeIncludingLineBreak.end, importStatement);
-			}
+			edit.insert(
+				(vdomImportLine ?? document.lineAt(0)).rangeIncludingLineBreak.end,
+				importStatement
+			);
 		}
 
 		// If icache create interface
 		const file = parse(document.fileName);
 		if (middleware === 'icache') {
-			const lastImportStatement = findLine(document, regex.importLine, { reverse: true });
-			if (lastImportStatement) {
-				edit.insert(
-					lastImportStatement.rangeIncludingLineBreak.end,
-					`\r\ninterface ${file.name}State {\r\n\r\n}\r\n`
-				);
-			}
+			regex.importLine.lastIndex = 0;
+			const lastImportStatement = findLine(editor.document, regex.importLine, {
+				reverse: true,
+			});
+			edit.insert(
+				(lastImportStatement ?? document.lineAt(0)).rangeIncludingLineBreak.end,
+				`\r\ninterface ${file.name}State {\r\n\r\n}\r\n\r\n`
+			);
 		}
 
 		const createLine = findLine(document, regex.createLine);
@@ -58,10 +65,22 @@ export function addMiddleware(middleware: string): Callback {
 			} else if (regex.createAloneLine.test(newCreateLine)) {
 				shouldEdit = false;
 				const tabCount = (newCreateLine.match(new RegExp(tab, 'g')) || []).length + 1;
-				edit.insert(
-					createLine.rangeIncludingLineBreak.end,
-					`${tab.repeat(tabCount)}${middleware},\r\n`
-				);
+
+				const lastMiddlewareLine = findLastMiddlewareInCreateLine(editor);
+				if (lastMiddlewareLine) {
+					regex.lastMiddleware.lastIndex = 0;
+					const text = lastMiddlewareLine.text.replace(regex.lastMiddleware, '$1,');
+					edit.replace(lastMiddlewareLine.range, text);
+					edit.insert(
+						lastMiddlewareLine.rangeIncludingLineBreak.end,
+						`${tab.repeat(tabCount)}${middleware}\r\n`
+					);
+				} else {
+					edit.insert(
+						createLine.rangeIncludingLineBreak.end,
+						`${tab.repeat(tabCount)}${middleware}\r\n`
+					);
+				}
 			} else {
 				newCreateLine = newCreateLine.replace('create()', `create({ ${middleware} })`);
 			}
@@ -71,21 +90,18 @@ export function addMiddleware(middleware: string): Callback {
 
 			switch (middleware) {
 				case 'store':
-					edit.insert(
-						createLine.range.start,
-						`const ${middleware} = ${importName}();\r\n`
-					);
+					edit.insert(createLine.range.start, `const store = ${importName}();\r\n`);
 					break;
 				case 'icache':
 					edit.insert(
 						createLine.range.start,
-						`const ${middleware} = createICacheMiddleware<${file.name}State>();\r\n`
+						`const icache = createICacheMiddleware<${file.name}State>();\r\n`
 					);
 					break;
 				case 'resources':
 					edit.insert(
 						createLine.range.start,
-						`const ${middleware} = createResourceMiddleware<REPLACE_ME>();\r\n`
+						`const resources = createResourceMiddleware<REPLACE_ME>();\r\n`
 					);
 					break;
 			}
@@ -158,10 +174,21 @@ export function addMiddleware(middleware: string): Callback {
 					wasEdited = false;
 					const tabCount =
 						(newFactoryMiddlewareLine.match(new RegExp(tab, 'g')) || []).length + 1;
-					edit.insert(
-						widgetFactoryMiddlewareLine.rangeIncludingLineBreak.end,
-						`${tab.repeat(tabCount)}${middleware},\r\n`
-					);
+					const lastMiddlewareLine = findLastMiddlewareInWidgetFactoryLine(editor);
+					if (lastMiddlewareLine) {
+						regex.lastMiddleware.lastIndex = 0;
+						const text = lastMiddlewareLine.text.replace(regex.lastMiddleware, '$1,');
+						edit.replace(lastMiddlewareLine.range, text);
+						edit.insert(
+							lastMiddlewareLine.rangeIncludingLineBreak.end,
+							`${tab.repeat(tabCount)}${middleware}\r\n`
+						);
+					} else {
+						edit.insert(
+							widgetFactoryMiddlewareLine.rangeIncludingLineBreak.end,
+							`${tab.repeat(tabCount)}${middleware}\r\n`
+						);
+					}
 				}
 			} else if (/[ ]*}[ ]*\)/g.test(newFactoryMiddlewareLine)) {
 				newFactoryMiddlewareLine = newFactoryMiddlewareLine.replace(

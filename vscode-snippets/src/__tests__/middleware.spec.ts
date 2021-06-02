@@ -46,6 +46,17 @@ describe('widget factory', () => {
 		'',
 	]);
 
+	const documentNoImports = createDocument([
+		'const factory = create();',
+		'',
+		'export default factory(function TestWidget() {',
+		'\treturn (',
+		'\t\t<div>Content</div>',
+		'\t);',
+		');',
+		'',
+	]);
+
 	const documentNoMiddleware = createDocument([
 		"import { create, tsx } from '@dojo/framework/core/vdom';",
 		'',
@@ -211,6 +222,21 @@ describe('widget factory', () => {
 		'',
 	]);
 
+	const documentEmptyMultiline = createDocument([
+		"import { create, tsx } from '@dojo/framework/core/vdom';",
+		'',
+		'const factory = create({',
+		'});',
+		'',
+		'export default factory(function TestWidget({ middleware: {',
+		'} }) {',
+		'\treturn (',
+		'\t\t<div>Content</div>',
+		'\t);',
+		');',
+		'',
+	]);
+
 	describe('addMiddleware', () => {
 		it('adds middleware to empty widget factory', () => {
 			(editor as any).document = documentEmpty;
@@ -234,6 +260,54 @@ describe('widget factory', () => {
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
 			expect(edit.insert).toHaveBeenCalledTimes(1);
+		});
+
+		it('adds middleware to empty widget factory with no imports', () => {
+			(editor as any).document = documentNoImports;
+
+			addMiddleware('dimensions')(editor, edit);
+
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentNoImports.lineAt(0).range,
+				'const factory = create({ dimensions });'
+			);
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				2,
+				documentNoImports.lineAt(2).range,
+				'export default factory(function TestWidget({ middleware: { dimensions } }) {'
+			);
+			expect(edit.replace).toHaveBeenCalledTimes(2);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				documentNoImports.lineAt(0).rangeIncludingLineBreak.end,
+				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
+			);
+			expect(edit.insert).toHaveBeenCalledTimes(1);
+		});
+
+		it('adds middleware to empty and multiline widget factory', () => {
+			(editor as any).document = documentEmptyMultiline;
+
+			addMiddleware('dimensions')(editor, edit);
+
+			expect(edit.replace).toHaveBeenCalledTimes(0);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				documentEmptyMultiline.lineAt(0).rangeIncludingLineBreak.end,
+				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				2,
+				documentEmptyMultiline.lineAt(2).rangeIncludingLineBreak.end,
+				'\tdimensions\r\n'
+			);
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				3,
+				documentEmptyMultiline.lineAt(5).rangeIncludingLineBreak.end,
+				'\tdimensions\r\n'
+			);
+			expect(edit.insert).toHaveBeenCalledTimes(3);
 		});
 
 		it('adds middleware to non-empty widget factory with no middleware yet', () => {
@@ -342,17 +416,22 @@ describe('widget factory', () => {
 				documentMultiLine.lineAt(3).range,
 				'const factory = create({ focus, dimensions });'
 			);
-			expect(edit.replace).toHaveBeenCalledTimes(1);
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				1,
 				documentMultiLine.lineAt(1).rangeIncludingLineBreak.end,
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				2,
+				documentMultiLine.lineAt(7).range,
+				'\t\tfocus,'
+			);
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				2,
-				documentMultiLine.lineAt(6).rangeIncludingLineBreak.end,
-				'\t\tdimensions,\r\n'
+				documentMultiLine.lineAt(7).rangeIncludingLineBreak.end,
+				'\t\tdimensions\r\n'
 			);
+			expect(edit.replace).toHaveBeenCalledTimes(2);
 			expect(edit.insert).toHaveBeenCalledTimes(2);
 		});
 
@@ -361,22 +440,32 @@ describe('widget factory', () => {
 
 			addMiddleware('dimensions')(editor, edit);
 
-			expect(edit.replace).not.toHaveBeenCalled();
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				1,
 				documentMultiLineCreateMultiLine.lineAt(1).rangeIncludingLineBreak.end,
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentMultiLineCreateMultiLine.lineAt(6).range,
+				'	focus,'
+			);
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				2,
-				documentMultiLineCreateMultiLine.lineAt(5).rangeIncludingLineBreak.end,
-				'\tdimensions,\r\n'
+				documentMultiLineCreateMultiLine.lineAt(6).rangeIncludingLineBreak.end,
+				'\tdimensions\r\n'
+			);
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				2,
+				documentMultiLineCreateMultiLine.lineAt(11).range,
+				'		focus,'
 			);
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				3,
-				documentMultiLineCreateMultiLine.lineAt(10).rangeIncludingLineBreak.end,
-				'\t\tdimensions,\r\n'
+				documentMultiLineCreateMultiLine.lineAt(11).rangeIncludingLineBreak.end,
+				'\t\tdimensions\r\n'
 			);
+			expect(edit.replace).toHaveBeenCalledTimes(2);
 			expect(edit.insert).toHaveBeenCalledTimes(3);
 		});
 
@@ -385,41 +474,61 @@ describe('widget factory', () => {
 
 			addMiddleware('dimensions')(editor, edit);
 
-			expect(edit.replace).not.toHaveBeenCalled();
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				1,
 				documentMultiLineCreateMultiLineNoTabs.lineAt(1).rangeIncludingLineBreak.end,
 				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
 			);
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				1,
+				documentMultiLineCreateMultiLineNoTabs.lineAt(6).range,
+				'focus,'
+			);
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				2,
-				documentMultiLineCreateMultiLineNoTabs.lineAt(5).rangeIncludingLineBreak.end,
-				'\tdimensions,\r\n'
+				documentMultiLineCreateMultiLineNoTabs.lineAt(6).rangeIncludingLineBreak.end,
+				'\tdimensions\r\n'
+			);
+			expect(edit.replace).toHaveBeenNthCalledWith(
+				2,
+				documentMultiLineCreateMultiLineNoTabs.lineAt(11).range,
+				'focus,'
 			);
 			expect(edit.insert).toHaveBeenNthCalledWith(
 				3,
-				documentMultiLineCreateMultiLineNoTabs.lineAt(10).rangeIncludingLineBreak.end,
-				'\tdimensions,\r\n'
+				documentMultiLineCreateMultiLineNoTabs.lineAt(11).rangeIncludingLineBreak.end,
+				'\tdimensions\r\n'
 			);
+			expect(edit.replace).toHaveBeenCalledTimes(2);
 			expect(edit.insert).toHaveBeenCalledTimes(3);
 		});
 
-		it('does not add anything if import/create/factory lines not found', () => {
+		it('inserts only import if import/create/factory lines not found', () => {
 			(editor as any).document = badDocument;
 
 			addMiddleware('dimensions')(editor, edit);
 
 			expect(edit.replace).not.toHaveBeenCalled();
-			expect(edit.insert).not.toHaveBeenCalled();
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				badDocument.lineAt(0).rangeIncludingLineBreak.end,
+				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
+			);
+			expect(edit.insert).toHaveBeenCalledTimes(1);
 		});
 
-		it('does not add anything if import/create/factory are multiline but missing end lines', () => {
+		it('inserts only import if import/create/factory are multiline but missing end lines', () => {
 			(editor as any).document = badFormattingDocument;
 
 			addMiddleware('dimensions')(editor, edit);
 
 			expect(edit.replace).not.toHaveBeenCalled();
-			expect(edit.insert).not.toHaveBeenCalled();
+			expect(edit.insert).toHaveBeenNthCalledWith(
+				1,
+				badFormattingDocument.lineAt(0).rangeIncludingLineBreak.end,
+				"import dimensions from '@dojo/framework/core/middleware/dimensions';\r\n"
+			);
+			expect(edit.insert).toHaveBeenCalledTimes(1);
 		});
 
 		describe('theme', () => {
@@ -653,6 +762,107 @@ describe('widget factory', () => {
 					'const store = createStoreMiddleware();\r\n'
 				);
 				expect(edit.insert).toHaveBeenCalledTimes(2);
+			});
+		});
+
+		describe('resources', () => {
+			it('creates resources middleware factory and configures middleware', () => {
+				(editor as any).document = documentEmpty;
+
+				addMiddleware('resources')(editor, edit);
+
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					1,
+					documentEmpty.lineAt(2).range,
+					'const factory = create({ resources });'
+				);
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					2,
+					documentEmpty.lineAt(4).range,
+					'export default factory(function TestWidget({ middleware: { resources } }) {'
+				);
+				expect(edit.replace).toHaveBeenCalledTimes(2);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					1,
+					documentEmpty.lineAt(0).rangeIncludingLineBreak.end,
+					"import { createResourceMiddleware } from '@dojo/framework/core/middleware/resources';\r\n"
+				);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					2,
+					documentEmpty.lineAt(2).range.start,
+					'const resources = createResourceMiddleware<REPLACE_ME>();\r\n'
+				);
+				expect(edit.insert).toHaveBeenCalledTimes(2);
+			});
+		});
+
+		describe('icache', () => {
+			it('creates resources middleware factory and configures middleware', () => {
+				(editor as any).document = documentEmpty;
+
+				addMiddleware('icache')(editor, edit);
+
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					1,
+					documentEmpty.lineAt(2).range,
+					'const factory = create({ icache });'
+				);
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					2,
+					documentEmpty.lineAt(4).range,
+					'export default factory(function TestWidget({ middleware: { icache } }) {'
+				);
+				expect(edit.replace).toHaveBeenCalledTimes(2);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					1,
+					documentEmpty.lineAt(0).rangeIncludingLineBreak.end,
+					"import { createICacheMiddleware } from '@dojo/framework/core/middleware/icache';\r\n"
+				);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					2,
+					documentEmpty.lineAt(0).rangeIncludingLineBreak.end,
+					'\r\ninterface TestWidgetState {\r\n\r\n}\r\n\r\n'
+				);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					3,
+					documentEmpty.lineAt(2).range.start,
+					'const icache = createICacheMiddleware<TestWidgetState>();\r\n'
+				);
+				expect(edit.insert).toHaveBeenCalledTimes(3);
+			});
+
+			it('defaults to first line if no imports exist when adding icache', () => {
+				(editor as any).document = documentNoImports;
+
+				addMiddleware('icache')(editor, edit);
+
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					1,
+					documentNoImports.lineAt(0).range,
+					'const factory = create({ icache });'
+				);
+				expect(edit.replace).toHaveBeenNthCalledWith(
+					2,
+					documentNoImports.lineAt(2).range,
+					'export default factory(function TestWidget({ middleware: { icache } }) {'
+				);
+				expect(edit.replace).toHaveBeenCalledTimes(2);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					1,
+					documentNoImports.lineAt(0).rangeIncludingLineBreak.end,
+					"import { createICacheMiddleware } from '@dojo/framework/core/middleware/icache';\r\n"
+				);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					2,
+					documentNoImports.lineAt(0).rangeIncludingLineBreak.end,
+					'\r\ninterface TestWidgetState {\r\n\r\n}\r\n\r\n'
+				);
+				expect(edit.insert).toHaveBeenNthCalledWith(
+					3,
+					documentNoImports.lineAt(0).range.start,
+					'const icache = createICacheMiddleware<TestWidgetState>();\r\n'
+				);
+				expect(edit.insert).toHaveBeenCalledTimes(3);
 			});
 		});
 	});
