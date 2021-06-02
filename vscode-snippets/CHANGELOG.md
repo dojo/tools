@@ -4,6 +4,10 @@ All notable changes to the "vscode-dojo-snippets" extension will be documented i
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [8.0.5]
+
+- **Enhancement** - Middleware is always added to the end of create and widget factory statements even when multiline.
+
 ## [8.0.4]
 
 - **Bugfix** - Fix partial matches to describe, test and it during test name detection.

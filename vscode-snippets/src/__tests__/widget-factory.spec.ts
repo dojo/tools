@@ -1,8 +1,14 @@
 import * as vscode from 'vscode';
 
-import { createDocument } from './document';
-
 import { addChildren, addProperties } from '../widget-factory';
+import {
+	badDocument,
+	badFormattingDocument,
+	documentEmpty,
+	documentMultiLine,
+	documentMultiLineCreateMultiLine,
+	documentSingleLine,
+} from './fixtures/test-documents';
 
 describe('widget factory', () => {
 	const editor = {
@@ -28,108 +34,6 @@ describe('widget factory', () => {
 	beforeEach(() => {
 		jest.resetAllMocks();
 	});
-
-	const documentEmpty = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
-		'',
-		"import * as css from './TestWidget.m.css';",
-		'',
-		'const factory = create();',
-		'',
-		'export default factory(function TestWidget() {',
-		'\tconst themedCss = theme.classes(css);',
-		'\treturn (',
-		'\t\t<div classes={themedCss.root}>{}</div>',
-		'\t);',
-		');',
-		'',
-	]);
-
-	const documentSingleLine = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
-		"import theme from '@dojo/framework/core/middleware/theme';",
-		'',
-		"import * as css from './TestWidget.m.css';",
-		'',
-		'const factory = create({ theme });',
-		'',
-		'export default factory(function TestWidget({ middleware: { theme } }) {',
-		'\tconst themedCss = theme.classes(css);',
-		'\treturn (',
-		'\t\t<div classes={themedCss.root}>{}</div>',
-		'\t);',
-		');',
-		'',
-	]);
-
-	const documentMultiLine = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
-		"import theme from '@dojo/framework/core/middleware/theme';",
-		'',
-		"import * as css from './TestWidget.m.css';",
-		'',
-		'const factory = create({ theme });',
-		'',
-		'export default factory(function TestWidget({',
-		'\tmiddleware: {',
-		'\t\ttheme',
-		'\t}',
-		'}) {',
-		'\tconst themedCss = theme.classes(css);',
-		'\treturn (',
-		'\t\t<div classes={themedCss.root}>{}</div>',
-		'\t);',
-		');',
-		'',
-	]);
-
-	const documentMultiLineCreateMultiLine = createDocument([
-		"import { tsx } from '@dojo/framework/core/vdom';",
-		"import theme from '@dojo/framework/core/middleware/theme';",
-		'',
-		"import * as css from './TestWidget.m.css';",
-		'',
-		'const factory = create({',
-		'\ttheme',
-		'});',
-		'',
-		'export default factory(function TestWidget({',
-		'\tmiddleware: {',
-		'\t\ttheme',
-		'\t}',
-		'}) {',
-		'\tconst themedCss = theme.classes(css);',
-		'\treturn (',
-		'\t\t<div classes={themedCss.root}>{}</div>',
-		'\t);',
-		');',
-		'',
-	]);
-
-	const badDocument = createDocument([
-		'export function TestWidget() {',
-		'\tconst themedCss = theme.classes(css);',
-		'\treturn (',
-		'\t\t<div classes={themedCss.root}>{}</div>',
-		'\t);',
-		');',
-		'',
-	]);
-
-	const badFormattingDocument = createDocument([
-		'const factory = create({',
-		'\ttheme',
-		'',
-		'export default factory(function TestWidget({',
-		'\t\ttheme',
-		'\t}',
-		'\tconst themedCss = theme.classes(css);',
-		'\treturn (',
-		'\t\t<div classes={themedCss.root}>{}</div>',
-		'\t);',
-		');',
-		'',
-	]);
 
 	describe('addProperties', () => {
 		it('adds properties to empty widget factory', () => {

@@ -14,4 +14,7 @@ export const regexFactory = () => ({
 	internObjectInterfaceRegex: /intern\.getInterface\('object'\)/g,
 	internObjectTestRegex: /^[ \t]*['"]{0,1}([\w ]+)['"]{0,1}\(\)[ \t]*\{[ \t]*$/g,
 	testRegex: /^[ \t]*(it|describe|test)[ ]*\(['"]([\s\S]+)['"]/g,
+	export: /^[ \t]*export/g,
+	lastMiddleware: /([ \t]*[a-zA-Z0-9_]+)[,]{0,1}[ \t]*$/g,
+	objectClose: /}[,]{0,1}/g,
 });

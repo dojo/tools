@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { parse } from 'path';
 
 import { regexFactory } from './regex';
-import { findLine, getTab } from './util';
+import { findEndOfCreateLine, findLine, getTab } from './util';
 import { Callback } from './interface';
 
 function addToWidgetFactory(
@@ -58,27 +58,13 @@ export const addProperties: Callback = (editor, edit) => {
 		);
 	}
 
-	const createLine = findLine(document, regex.createLine);
-	if (createLine) {
-		let line: vscode.TextLine | undefined;
-		if (regex.createLineEnd.test(createLine.text)) {
-			line = createLine;
-		} else {
-			const createEndLine = findLine(document, regex.createLineEnd, {
-				startAt: createLine.lineNumber,
-				endTest: /export/g,
-			});
-			if (createEndLine && !/export/g.test(createEndLine.text)) {
-				line = createEndLine;
-			}
-		}
-		if (line) {
-			const newCreateLine = line.text.replace(
-				');',
-				`).properties<${file.name}Properties>();`
-			);
-			edit.replace(line.range, newCreateLine);
-		}
+	const endOfCreateLine = findEndOfCreateLine(editor);
+	if (endOfCreateLine) {
+		const newCreateLine = endOfCreateLine.text.replace(
+			');',
+			`).properties<${file.name}Properties>();`
+		);
+		edit.replace(endOfCreateLine.range, newCreateLine);
 	}
 
 	addToWidgetFactory(document, edit, editor.options, 'properties', (widgetFactoryEndLine) => {

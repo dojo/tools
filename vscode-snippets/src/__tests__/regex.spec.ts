@@ -479,4 +479,81 @@ describe('regex', () => {
 			});
 		});
 	});
+
+	describe('export', () => {
+		it('matches export', () => {
+			const line = 'export default factory(function TestWidget({';
+			expect(regex.export.test(line)).toBeTruthy();
+		});
+
+		it('matches export with leading spaces and tabs', () => {
+			const line = '      	export anything';
+			expect(regex.export.test(line)).toBeTruthy();
+		});
+
+		it('should not match if has leading characters', () => {
+			const line = 'otherstuffexport anything';
+			expect(regex.export.test(line)).toBeFalsy();
+		});
+	});
+
+	describe('last middleware line', () => {
+		it('does not match empty create', () => {
+			const line = 'const factory = create();';
+			expect(regex.lastMiddleware.test(line)).toBeFalsy();
+		});
+
+		it('does not match single line create', () => {
+			const line = 'const factory = create({ theme });';
+			expect(regex.lastMiddleware.test(line)).toBeFalsy();
+		});
+
+		it('matches middleware without comma', () => {
+			const line = ' 	theme';
+			expect(regex.lastMiddleware.test(line)).toBeTruthy();
+			regex.lastMiddleware.lastIndex = 0;
+			const match = regex.lastMiddleware.exec(line);
+			expect(match).toHaveLength(2);
+			expect(match?.[1]).toBe(' 	theme');
+		});
+
+		it('matches middleware with comma', () => {
+			const line = ' 	theme,';
+			expect(regex.lastMiddleware.test(line)).toBeTruthy();
+			regex.lastMiddleware.lastIndex = 0;
+			const match = regex.lastMiddleware.exec(line);
+			expect(match).toHaveLength(2);
+			expect(match?.[1]).toBe(' 	theme');
+		});
+
+		it('matches middleware with trailing spaces and tabs', () => {
+			const line = ' 	theme 	';
+			expect(regex.lastMiddleware.test(line)).toBeTruthy();
+			regex.lastMiddleware.lastIndex = 0;
+			const match = regex.lastMiddleware.exec(line);
+			expect(match).toHaveLength(2);
+			expect(match?.[1]).toBe(' 	theme');
+		});
+
+		it('matches last middleware of line with multiple middleware', () => {
+			const line = '	something, theme,';
+			expect(regex.lastMiddleware.test(line)).toBeTruthy();
+			regex.lastMiddleware.lastIndex = 0;
+			const match = regex.lastMiddleware.exec(line);
+			expect(match).toHaveLength(2);
+			expect(match?.[1]).toBe(' theme');
+		});
+	});
+
+	describe('object close', () => {
+		it('matches with leading characters', () => {
+			const line = '	 something, something else	 }';
+			expect(regex.objectClose.test(line)).toBeTruthy();
+		});
+
+		it('matches with trailing comma', () => {
+			const line = '	 something, something else	 },';
+			expect(regex.objectClose.test(line)).toBeTruthy();
+		});
+	});
 });
